@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>マイページ - 有給休暇管理アプリ</title>
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/pages.css">
+  <link rel="stylesheet" href="../../assets/css/responsive.css">
+</head>
+<body>
+
+  <header class="header">
+    <span class="header-title">有給休暇管理アプリ</span>
+    <div class="header-user">
+      <span id="headerUserName"></span>
+      <button class="btn btn-outline btn-sm" data-action="logout">ログアウト</button>
+    </div>
+  </header>
+
+  <main class="main-wrapper" style="margin-left:0;">
+    <div class="page-content" style="max-width:800px; margin:0 auto;">
+
+      <!-- プロフィールヘッダー -->
+      <div class="mypage-header">
+        <div class="mypage-name" id="myName"></div>
+        <div class="mypage-meta" id="myMeta"></div>
+        <div class="leave-remaining-large">
+          <span id="myRemaining">--</span>
+          <span style="font-size:1.2rem; font-weight:400;">日</span>
+        </div>
+        <div style="font-size:13px; opacity:0.8; margin-top:4px;">現在の有給残日数</div>
+      </div>
+
+      <!-- 有給サマリー -->
+      <section class="section">
+        <h3 class="section-title">有給サマリー</h3>
+        <div class="leave-summary-grid" id="mySummary">
+          <!-- JS で描画 -->
+          <!-- 今年付与された日数 / 今年取得した日数 -->
+          <!-- 次回付与日 / 次回付与予定日数 / 失効予定日数 -->
+        </div>
+      </section>
+
+      <!-- 付与履歴 -->
+      <section class="section">
+        <h3 class="section-title">付与履歴</h3>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>付与日</th>
+                <th>付与日数</th>
+                <th>取得済み</th>
+                <th>残日数</th>
+                <th>失効日</th>
+                <th>状態</th>
+              </tr>
+            </thead>
+            <tbody id="myGrantHistoryBody">
+              <!-- JS で描画 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 取得履歴 -->
+      <section class="section">
+        <h3 class="section-title">取得履歴</h3>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>取得日</th>
+                <th>取得日数</th>
+                <th>備考</th>
+              </tr>
+            </thead>
+            <tbody id="myUsageHistoryBody">
+              <!-- JS で描画 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="../../assets/js/storage.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/seed.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/routerGuard.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    requireLogin();
+  </script>
+</body>
+</html>

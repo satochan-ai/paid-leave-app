@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ダッシュボード - 有給休暇管理アプリ</title>
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/pages.css">
+  <link rel="stylesheet" href="../../assets/css/responsive.css">
+</head>
+<body>
+
+  <header class="header">
+    <span class="header-title">有給休暇管理アプリ</span>
+    <div class="header-user">
+      <span id="headerUserName"></span>
+      <button class="btn btn-outline btn-sm" data-action="logout">ログアウト</button>
+    </div>
+  </header>
+
+  <nav class="sidebar">
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html" class="active">ダッシュボード</a></li>
+      <li><a href="employees.html">社員一覧</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-wrapper">
+    <div class="page-content">
+
+      <div class="page-header">
+        <h2>ダッシュボード</h2>
+      </div>
+
+      <!-- KPIカード -->
+      <div class="dashboard-stats" id="statsContainer"></div>
+
+      <!-- クイックリンク -->
+      <div class="quick-links">
+        <a href="employees.html" class="btn btn-primary">社員一覧へ</a>
+        <a href="employee-form.html" class="btn btn-outline">社員追加へ</a>
+      </div>
+
+      <!-- 失効予定アラート -->
+      <section class="section">
+        <h3 class="section-title">失効予定が近い社員（30日以内）</h3>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>社員名</th>
+                <th>失効予定日</th>
+                <th>失効予定日数</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="expiringTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="../../assets/js/storage.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/seed.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/routerGuard.js"></script>
+  <script src="../../assets/js/leaveCalculator.js"></script>
+  <script src="../../assets/js/leaveService.js"></script>
+  <script src="../../assets/js/employeeService.js"></script>
+  <script src="../../assets/js/validation.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    requireAdmin();
+    initializeApp();
+    renderAdminDashboard();
+  </script>
+</body>
+</html>

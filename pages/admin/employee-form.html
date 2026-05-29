@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>社員追加・編集 - 有給休暇管理アプリ</title>
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/pages.css">
+  <link rel="stylesheet" href="../../assets/css/responsive.css">
+</head>
+<body>
+
+  <header class="header">
+    <span class="header-title">有給休暇管理アプリ</span>
+    <div class="header-user">
+      <span id="headerUserName"></span>
+      <button class="btn btn-outline btn-sm" data-action="logout">ログアウト</button>
+    </div>
+  </header>
+
+  <nav class="sidebar">
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html">ダッシュボード</a></li>
+      <li><a href="employees.html" class="active">社員一覧</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-wrapper">
+    <div class="page-content form-page">
+
+      <div class="page-header">
+        <h2 id="pageTitle">社員追加</h2>
+        <a href="employees.html" class="btn btn-outline btn-sm">← 社員一覧へ戻る</a>
+      </div>
+
+      <div class="form-card">
+        <form id="employeeForm" novalidate>
+
+          <div class="form-group">
+            <label for="name">社員名 <span class="required">*</span></label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="山田 太郎">
+            <p class="field-error" id="nameError"></p>
+          </div>
+
+          <div class="form-group">
+            <label for="email">メールアドレス <span class="required">*</span></label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="yamada@example.com">
+            <p class="field-error" id="emailError"></p>
+          </div>
+
+          <div class="form-group">
+            <label for="password">パスワード <span class="required">*</span></label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="ログイン用パスワード">
+            <p class="field-error" id="passwordError"></p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="role">権限 <span class="required">*</span></label>
+              <select id="role" name="role" class="form-control">
+                <option value="employee">社員</option>
+                <option value="admin">管理者</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="status">ステータス <span class="required">*</span></label>
+              <select id="status" name="status" class="form-control">
+                <option value="active">在籍</option>
+                <option value="leave">休職中</option>
+                <option value="retired">退職</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="hireDate">入社日 <span class="required">*</span></label>
+              <input type="date" id="hireDate" name="hireDate" class="form-control">
+              <p class="field-error" id="hireDateError"></p>
+            </div>
+
+            <div class="form-group">
+              <label for="retirementDate">退職日</label>
+              <input type="date" id="retirementDate" name="retirementDate" class="form-control">
+              <p class="field-error" id="retirementDateError"></p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="note">備考</label>
+            <textarea id="note" name="note" class="form-control" rows="3" placeholder="管理メモ（任意）"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <a href="employees.html" id="cancelBtn" class="btn btn-outline">キャンセル</a>
+            <button type="submit" class="btn btn-primary" id="submitBtn">保存する</button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../../assets/js/storage.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/seed.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/routerGuard.js"></script>
+  <script src="../../assets/js/leaveCalculator.js"></script>
+  <script src="../../assets/js/leaveService.js"></script>
+  <script src="../../assets/js/employeeService.js"></script>
+  <script src="../../assets/js/validation.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    requireAdmin();
+    initializeApp();
+    renderEmployeeFormPage();
+  </script>
+</body>
+</html>

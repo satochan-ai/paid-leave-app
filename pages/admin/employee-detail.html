@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>社員詳細 - 有給休暇管理アプリ</title>
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/pages.css">
+  <link rel="stylesheet" href="../../assets/css/responsive.css">
+</head>
+<body>
+
+  <header class="header">
+    <span class="header-title">有給休暇管理アプリ</span>
+    <div class="header-user">
+      <span id="headerUserName"></span>
+      <button class="btn btn-outline btn-sm" data-action="logout">ログアウト</button>
+    </div>
+  </header>
+
+  <nav class="sidebar">
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html">ダッシュボード</a></li>
+      <li><a href="employees.html" class="active">社員一覧</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-wrapper">
+    <div class="page-content" id="detailContent">
+
+      <div class="page-header">
+        <h2 id="pageTitle">社員詳細</h2>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="employees.html" id="backBtn" class="btn btn-outline btn-sm">← 社員一覧へ戻る</a>
+          <a href="#" id="editBtn" class="btn btn-outline btn-sm">編集</a>
+          <a href="#" id="leaveRegisterBtn" class="btn btn-primary btn-sm">有給取得登録</a>
+        </div>
+      </div>
+
+      <!-- 基本情報 -->
+      <section class="section">
+        <div class="card">
+          <h3 class="section-title">基本情報</h3>
+          <div class="employee-info-grid" id="employeeInfo"></div>
+        </div>
+      </section>
+
+      <!-- 有給サマリー -->
+      <section class="section">
+        <h3 class="section-title">有給サマリー</h3>
+        <div class="leave-summary-grid" id="leaveSummary"></div>
+      </section>
+
+      <!-- 付与履歴 -->
+      <section class="section">
+        <h3 class="section-title">付与履歴</h3>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>付与日</th>
+                <th>付与日数</th>
+                <th>使用済み</th>
+                <th>残日数</th>
+                <th>失効日</th>
+                <th>状態</th>
+              </tr>
+            </thead>
+            <tbody id="grantHistoryBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 取得履歴 -->
+      <section class="section">
+        <h3 class="section-title">取得履歴</h3>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>取得日</th>
+                <th>取得日数</th>
+                <th>備考</th>
+                <th>登録日</th>
+              </tr>
+            </thead>
+            <tbody id="usageHistoryBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="../../assets/js/storage.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/seed.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/routerGuard.js"></script>
+  <script src="../../assets/js/leaveCalculator.js"></script>
+  <script src="../../assets/js/leaveService.js"></script>
+  <script src="../../assets/js/employeeService.js"></script>
+  <script src="../../assets/js/validation.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    requireAdmin();
+    initializeApp();
+    renderEmployeeDetailPage();
+  </script>
+</body>
+</html>

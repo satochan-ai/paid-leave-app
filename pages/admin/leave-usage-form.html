@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>有給取得登録 - 有給休暇管理アプリ</title>
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/pages.css">
+  <link rel="stylesheet" href="../../assets/css/responsive.css">
+</head>
+<body>
+
+  <header class="header">
+    <span class="header-title">有給休暇管理アプリ</span>
+    <div class="header-user">
+      <span id="headerUserName"></span>
+      <button class="btn btn-outline btn-sm" data-action="logout">ログアウト</button>
+    </div>
+  </header>
+
+  <nav class="sidebar">
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html">ダッシュボード</a></li>
+      <li><a href="employees.html" class="active">社員一覧</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-wrapper">
+    <div class="page-content form-page">
+
+      <div class="page-header">
+        <h2>有給取得登録</h2>
+        <a href="#" id="backBtn" class="btn btn-outline btn-sm">← 社員詳細へ戻る</a>
+      </div>
+
+      <!-- 対象社員情報カード -->
+      <div class="target-employee-card" id="targetEmployeeInfo">
+        <!-- JS で描画 -->
+      </div>
+
+      <!-- 登録フォーム -->
+      <div class="form-card">
+        <form id="leaveUsageForm" novalidate>
+
+          <div class="form-group">
+            <label for="usageDate">取得日 <span class="required">*</span></label>
+            <input type="date" id="usageDate" name="usageDate" class="form-control">
+            <p class="field-error" id="usageDateError"></p>
+          </div>
+
+          <div class="form-group">
+            <label for="usedDays">取得日数 <span class="required">*</span></label>
+            <select id="usedDays" name="usedDays" class="form-control">
+              <option value="">選択してください</option>
+              <option value="0.5">0.5日（半日）</option>
+              <option value="1">1日</option>
+            </select>
+            <p class="field-error" id="usedDaysError"></p>
+          </div>
+
+          <div class="form-group">
+            <label for="note">備考</label>
+            <textarea id="note" name="note" class="form-control" rows="3" placeholder="例：私用、夏季休暇など"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <a href="#" id="cancelBtn" class="btn btn-outline">キャンセル</a>
+            <button type="submit" class="btn btn-primary">登録する</button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../../assets/js/storage.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/seed.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/routerGuard.js"></script>
+  <script src="../../assets/js/leaveCalculator.js"></script>
+  <script src="../../assets/js/leaveService.js"></script>
+  <script src="../../assets/js/employeeService.js"></script>
+  <script src="../../assets/js/validation.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    requireAdmin();
+    initializeApp();
+    renderLeaveUsageFormPage();
+  </script>
+</body>
+</html>

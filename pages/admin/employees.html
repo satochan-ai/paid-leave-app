@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>社員一覧 - 有給休暇管理アプリ</title>
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/pages.css">
+  <link rel="stylesheet" href="../../assets/css/responsive.css">
+</head>
+<body>
+
+  <header class="header">
+    <span class="header-title">有給休暇管理アプリ</span>
+    <div class="header-user">
+      <span id="headerUserName"></span>
+      <button class="btn btn-outline btn-sm" data-action="logout">ログアウト</button>
+    </div>
+  </header>
+
+  <nav class="sidebar">
+    <ul class="sidebar-nav">
+      <li><a href="dashboard.html">ダッシュボード</a></li>
+      <li><a href="employees.html" class="active">社員一覧</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-wrapper">
+    <div class="page-content">
+
+      <div class="page-header">
+        <h2>社員一覧</h2>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <a href="employee-form.html" class="btn btn-primary btn-sm">+ 社員追加</a>
+          <a href="dashboard.html" class="btn btn-outline btn-sm">← ダッシュボード</a>
+        </div>
+      </div>
+
+      <!-- 検索・フィルター -->
+      <div class="toolbar">
+        <input type="text" id="searchInput" class="form-control" style="max-width:260px;" placeholder="名前・メールで検索">
+        <select id="statusFilter" class="form-control" style="max-width:140px;">
+          <option value="all">全て</option>
+          <option value="active">在籍</option>
+          <option value="leave">休職中</option>
+          <option value="retired">退職</option>
+        </select>
+        <button class="btn btn-outline" id="searchBtn">検索</button>
+      </div>
+
+      <!-- 社員一覧テーブル -->
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>社員名</th>
+              <th>メールアドレス</th>
+              <th>入社日</th>
+              <th>ステータス</th>
+              <th>総付与</th>
+              <th>総取得</th>
+              <th>残日数</th>
+              <th>次回付与日</th>
+              <th>次回付与</th>
+              <th>直近失効日</th>
+              <th>直近失効</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="employeeTableBody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../../assets/js/storage.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/seed.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/routerGuard.js"></script>
+  <script src="../../assets/js/leaveCalculator.js"></script>
+  <script src="../../assets/js/leaveService.js"></script>
+  <script src="../../assets/js/employeeService.js"></script>
+  <script src="../../assets/js/validation.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    requireAdmin();
+    initializeApp();
+    renderEmployeeListPage();
+  </script>
+</body>
+</html>

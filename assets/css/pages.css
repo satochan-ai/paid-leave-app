@@ -1,0 +1,204 @@
+/* pages.css - 画面固有スタイル */
+
+/* ログイン画面 */
+.page-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f4ff;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.login-title {
+  font-size: 1.4rem;
+  text-align: center;
+  color: #1e3a5f;
+  margin-bottom: 28px;
+}
+
+.login-form .form-group {
+  margin-bottom: 20px;
+}
+
+.login-form .form-control {
+  height: 44px;
+}
+
+/* 管理者ダッシュボード */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border-left: 4px solid #3b82f6;
+}
+
+.stat-card.warning {
+  border-left-color: #f59e0b;
+}
+
+.stat-card.danger {
+  border-left-color: #ef4444;
+}
+
+/* 社員一覧 */
+.employee-search-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.employee-search-bar .form-control {
+  max-width: 280px;
+}
+
+/* 社員詳細 */
+.employee-profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.employee-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.info-item label {
+  font-size: 11px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.info-item p {
+  font-size: 14px;
+  color: #1f2937;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* 有給サマリー */
+.leave-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+/* 社員追加・編集 / 有給取得登録フォーム共通 */
+.form-page {
+  max-width: 680px;
+}
+
+.form-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 28px 32px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  margin-bottom: 24px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.required {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+.field-error {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
+  min-height: 18px;
+}
+
+.field-error:empty {
+  display: none;
+}
+
+/* 対象社員情報カード（有給取得登録画面） */
+.target-employee-card {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.target-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.remaining-highlight {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1d4ed8;
+  margin: 0;
+}
+
+/* マイページ */
+.mypage-header {
+  background: linear-gradient(135deg, #1e3a5f 0%, #3b82f6 100%);
+  color: #fff;
+  padding: 28px 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.mypage-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.mypage-meta {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.leave-remaining-large {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 12px;
+}
