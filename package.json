@@ -2,18 +2,21 @@
   "name": "paid-leave-app",
   "version": "1.0.0",
   "description": "HTML / CSS / JavaScript / localStorage で作成した、有給休暇管理アプリのMVPです。",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "screenshots": "node scripts/take_screenshots.mjs"
   },
-  "keywords": [],
+  "keywords": [
+    "leave-management",
+    "paid-leave",
+    "html",
+    "css",
+    "javascript",
+    "localStorage"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
+  "devDependencies": {
     "playwright": "^1.60.0"
   }
 }

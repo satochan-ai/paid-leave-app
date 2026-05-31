@@ -118,6 +118,30 @@ python -m http.server 8080
 
 ---
 
+## スクリーンショット撮影
+
+このリポジトリには、Playwright を使ったスクリーンショット自動撮影スクリプトを用意しています。  
+外部サーバーの起動は不要です。`npm run screenshots` だけで完結します。
+
+### 事前準備
+
+```bash
+npm install
+```
+
+### 撮影実行
+
+```bash
+npm run screenshots
+```
+
+撮影された画像は `docs/images/` に保存されます。
+
+> **注意：** `node_modules/` は `.gitignore` により Git 管理対象外です。  
+> `docs/images/*.png` は README 表示に使うため Git 管理対象です。
+
+---
+
 ## 初期ログイン情報
 
 ### 管理者

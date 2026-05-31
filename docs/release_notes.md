@@ -135,6 +135,17 @@
 
 ---
 
+## Round 16：GitHub公開前整理
+
+- `.gitignore` に Playwright artifacts を追記
+- `package.json` に `screenshots` スクリプト追加・`devDependencies` に移動・`type: module` に変更
+- `scripts/take_screenshots.mjs` を内蔵 HTTP サーバー付きに改修（外部サーバー不要）
+- `README.md` にスクリーンショット撮影手順（`npm run screenshots`）を追記
+- `docs/local_setup_guide.md` に撮影手順追記
+- `docs/screenshot_guide.md` に自動撮影スクリプト説明追記
+- `docs/github_publish_checklist.md` に `.gitignore`・スクリーンショット・package.json 確認項目追加
+- `docs/release_notes.md` に Round16 追記
+
 ## Round 13：GitHub公開準備
 
 - `README.md` をGitHub公開向けに再整理

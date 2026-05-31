@@ -63,3 +63,39 @@ GitHub Pagesで公開する場合の追加確認：
 
 **注意：** GitHub PagesでもlocalStorageは閲覧者のブラウザごとに独立しています。
 管理者と社員のデータがサーバーで共有されるわけではありません。
+
+---
+
+## 8. .gitignore 確認
+
+- [ ] `.gitignore` が存在する
+- [ ] `node_modules/` が除外されている
+- [ ] `.env` が除外されている
+- [ ] ログファイル（`*.log`）が除外されている
+- [ ] `docs/images/*.png` は除外されていない（README 表示に必要）
+
+## 9. スクリーンショット確認
+
+- [ ] `docs/images/01_login.png` が存在する
+- [ ] `docs/images/02_admin_dashboard.png` が存在する
+- [ ] `docs/images/03_employee_list.png` が存在する
+- [ ] `docs/images/04_employee_detail.png` が存在する
+- [ ] `docs/images/07_employee_mypage.png` が存在する
+- [ ] GitHub 上で README の画像が表示される
+
+## 10. package.json 確認
+
+- [ ] `npm install` が実行できる
+- [ ] `npm run screenshots` が実行できる（外部サーバー不要）
+- [ ] 不要な依存関係が含まれていない（playwright のみ devDependencies）
+- [ ] `node_modules/` が Git 管理に入っていない（`git status` で確認）
+
+---
+
+## 最終 git 確認手順
+
+```bash
+git status       # node_modules/ が表示されないことを確認
+git add .
+git commit -m "Round16: GitHub publish cleanup"
+```
