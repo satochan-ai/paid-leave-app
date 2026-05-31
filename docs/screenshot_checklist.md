@@ -13,7 +13,7 @@
 
 ### 1. ログイン画面
 
-- [ ] 撮影完了 → `docs/images/01_login.png`
+- [x] 撮影完了 → `docs/images/01_login.png`
 
 | 項目 | 内容 |
 |------|------|
@@ -26,7 +26,7 @@
 
 ### 2. 管理者ダッシュボード（KPIカード全体）
 
-- [ ] 撮影完了 → `docs/images/02_admin_dashboard.png`
+- [x] 撮影完了 → `docs/images/02_admin_dashboard.png`
 
 | 項目 | 内容 |
 |------|------|
@@ -39,7 +39,7 @@
 
 ### 3. クイックアクション
 
-- [ ] 撮影完了 → `docs/images/02_admin_dashboard.png`（ダッシュボードと同一ファイル可）
+- [x] 撮影完了 → `docs/images/02_admin_dashboard.png`（ダッシュボードと同一ファイル可）
 
 | 項目 | 内容 |
 |------|------|
@@ -52,7 +52,7 @@
 
 ### 4. 社員一覧
 
-- [ ] 撮影完了 → `docs/images/03_employee_list.png`
+- [x] 撮影完了 → `docs/images/03_employee_list.png`
 
 | 項目 | 内容 |
 |------|------|
@@ -65,7 +65,7 @@
 
 ### 5. 社員詳細
 
-- [ ] 撮影完了 → `docs/images/04_employee_detail.png`
+- [x] 撮影完了 → `docs/images/04_employee_detail.png`
 
 | 項目 | 内容 |
 |------|------|
@@ -78,7 +78,7 @@
 
 ### 6. 仮ログイン情報カード
 
-- [ ] 撮影完了 → `docs/images/05_login_info_card.png`
+- [x] 撮影完了 → `docs/images/05_login_info_card.png`
 
 | 項目 | 内容 |
 |------|------|
@@ -91,7 +91,7 @@
 
 ### 7. 有給取得登録
 
-- [ ] 撮影完了 → `docs/images/06_leave_usage_form.png`
+- [x] 撮影完了 → `docs/images/06_leave_usage_form.png`
 
 | 項目 | 内容 |
 |------|------|
@@ -104,7 +104,7 @@
 
 ### 8. 有給付与チェック
 
-- [ ] 撮影完了 → `docs/images/10_grant_check.png`
+- [x] 撮影完了 → `docs/images/10_grant_check.png`
 
 | 項目 | 内容 |
 |------|------|
@@ -117,7 +117,7 @@
 
 ### 9. CSV出力セクション
 
-- [ ] 撮影完了 → `docs/images/08_csv_export.png`
+- [x] 撮影完了 → `docs/images/08_csv_export.png`
 
 | 項目 | 内容 |
 |------|------|
@@ -130,7 +130,7 @@
 
 ### 10. バックアップ/復元セクション
 
-- [ ] 撮影完了 → `docs/images/09_backup_restore.png`
+- [x] 撮影完了 → `docs/images/09_backup_restore.png`
 
 | 項目 | 内容 |
 |------|------|
@@ -143,7 +143,7 @@
 
 ### 11. 社員マイページ
 
-- [ ] 撮影完了 → `docs/images/07_employee_mypage.png`
+- [x] 撮影完了 → `docs/images/07_employee_mypage.png`
 
 | 項目 | 内容 |
 |------|------|
@@ -156,6 +156,6 @@
 
 ## 撮影完了確認
 
-- [ ] 全11枚の撮影完了
-- [ ] ファイル名を整理（例：`01_login.png`、`02_dashboard_kpi.png`）
+- [x] 全10枚の撮影完了（Playwright で自動撮影）
+- [x] ファイル名を整理（`docs/images/01_login.png` 〜 `10_grant_check.png`）
 - [ ] ポートフォリオ資料に貼り付け完了
