@@ -14,6 +14,7 @@
 
   <div class="login-container">
     <h1 class="login-title">有給休暇管理アプリ</h1>
+    <p class="login-subtitle">社員ごとの有給付与・取得・残日数を管理</p>
 
     <form id="loginForm" class="login-form">
       <div class="form-group">
@@ -30,6 +31,25 @@
 
       <button type="submit" class="btn btn-primary btn-block">ログイン</button>
     </form>
+
+    <!-- デモログイン情報 -->
+    <div class="login-demo-card">
+      <div class="login-demo-title">デモ用ログイン情報</div>
+      <div class="login-demo-grid">
+        <div class="login-demo-block">
+          <div class="login-demo-role">管理者</div>
+          <div class="login-demo-item"><span>メール</span>admin@example.com</div>
+          <div class="login-demo-item"><span>パスワード</span>admin123</div>
+        </div>
+        <div class="login-demo-block">
+          <div class="login-demo-role">社員</div>
+          <div class="login-demo-item"><span>メール</span>yamada@example.com</div>
+          <div class="login-demo-item"><span>パスワード</span>password123</div>
+        </div>
+      </div>
+      <p class="login-demo-note">このログイン情報はデモ用です。本番運用では表示しません。</p>
+    </div>
+
     <p class="prototype-note">このアプリはlocalStorageを使用したプロトタイプです。本番運用にはバックエンド認証・DB管理が必要です。</p>
   </div>
 

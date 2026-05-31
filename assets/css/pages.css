@@ -19,10 +19,77 @@
 }
 
 .login-title {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   text-align: center;
   color: #1e3a5f;
-  margin-bottom: 28px;
+  margin-bottom: 4px;
+}
+
+.login-subtitle {
+  font-size: 13px;
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+/* デモログイン情報カード */
+.login-demo-card {
+  margin-top: 20px;
+  background-color: #f8faff;
+  border: 1px solid #c7d7f5;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.login-demo-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #3b82f6;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.login-demo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.login-demo-block {
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 10px 12px;
+  border: 1px solid #e0eaff;
+}
+
+.login-demo-role {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.login-demo-item {
+  font-size: 12px;
+  color: #374151;
+  line-height: 1.8;
+}
+
+.login-demo-item span {
+  color: #9ca3af;
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+.login-demo-note {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 0;
+  text-align: center;
 }
 
 .login-form .form-group {
@@ -31,6 +98,51 @@
 
 .login-form .form-control {
   height: 44px;
+}
+
+/* クイックアクション */
+.quick-action-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.quick-action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100px;
+  height: 80px;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.15s, border-color 0.15s;
+  font-family: inherit;
+}
+
+.quick-action-card:hover {
+  background-color: #f0f4ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.quick-action-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.quick-action-label {
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
 }
 
 /* 管理者ダッシュボード */

@@ -24,6 +24,7 @@
     <ul class="sidebar-nav">
       <li><a href="dashboard.html" class="active">ダッシュボード</a></li>
       <li><a href="employees.html">社員一覧</a></li>
+      <li><a href="employee-form.html">社員追加</a></li>
     </ul>
   </nav>
 
@@ -37,27 +38,30 @@
       <!-- KPIカード -->
       <div class="dashboard-stats" id="statsContainer"></div>
 
-      <!-- クイックリンク -->
-      <div class="quick-links">
-        <a href="employees.html" class="btn btn-primary">社員一覧へ</a>
-        <a href="employee-form.html" class="btn btn-outline">社員追加へ</a>
-      </div>
-
-      <!-- 有給付与チェック -->
-      <section class="section grant-check-section">
-        <h3 class="section-title">有給付与チェック</h3>
-        <p class="section-desc">入社日と現在日をもとに、付与されているべき有給休暇を確認し、不足分を自動付与します。</p>
-        <button class="btn btn-primary btn-sm" onclick="handleGenerateLeaveGrantsForAll()">全社員の付与チェックを実行</button>
-        <div id="grantCheckResult" class="grant-check-result" style="margin-top:16px;"></div>
-      </section>
-
-      <!-- CSV出力 -->
+      <!-- クイックアクション -->
       <section class="section">
-        <h3 class="section-title">CSV出力</h3>
-        <div class="csv-button-group">
-          <button class="btn btn-secondary btn-sm" onclick="exportEmployeesCsv()">社員一覧CSV</button>
-          <button class="btn btn-secondary btn-sm" onclick="exportLeaveSummaryCsv()">有給残日数CSV</button>
-          <button class="btn btn-secondary btn-sm" onclick="exportLeaveUsagesCsv()">有給取得履歴CSV</button>
+        <h3 class="section-title">クイックアクション</h3>
+        <div class="quick-action-grid">
+          <a href="employees.html" class="quick-action-card">
+            <div class="quick-action-icon">👥</div>
+            <div class="quick-action-label">社員一覧</div>
+          </a>
+          <a href="employee-form.html" class="quick-action-card">
+            <div class="quick-action-icon">➕</div>
+            <div class="quick-action-label">社員追加</div>
+          </a>
+          <button class="quick-action-card" onclick="handleGenerateLeaveGrantsForAll()">
+            <div class="quick-action-icon">✅</div>
+            <div class="quick-action-label">有給付与チェック</div>
+          </button>
+          <button class="quick-action-card" onclick="exportLeaveSummaryCsv()">
+            <div class="quick-action-icon">📊</div>
+            <div class="quick-action-label">有給残日数CSV</div>
+          </button>
+          <button class="quick-action-card" onclick="downloadBackupJson()">
+            <div class="quick-action-icon">💾</div>
+            <div class="quick-action-label">バックアップ</div>
+          </button>
         </div>
       </section>
 
@@ -76,6 +80,25 @@
             </thead>
             <tbody id="expiringTableBody"></tbody>
           </table>
+        </div>
+      </section>
+
+      <!-- 有給付与チェック -->
+      <section class="section grant-check-section">
+        <h3 class="section-title">有給付与チェック</h3>
+        <p class="section-desc">入社日と現在日をもとに、付与されているべき有給休暇を確認し、不足分を自動付与します。</p>
+        <button class="btn btn-primary btn-sm" onclick="handleGenerateLeaveGrantsForAll()">全社員の付与チェックを実行</button>
+        <div id="grantCheckResult" class="grant-check-result" style="margin-top:16px;"></div>
+      </section>
+
+      <!-- CSV出力 -->
+      <section class="section">
+        <h3 class="section-title">CSV出力</h3>
+        <p class="section-desc">各種データをCSV形式でダウンロードできます。</p>
+        <div class="csv-button-group">
+          <button class="btn btn-secondary btn-sm" onclick="exportEmployeesCsv()">社員一覧CSV</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportLeaveSummaryCsv()">有給残日数CSV</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportLeaveUsagesCsv()">有給取得履歴CSV</button>
         </div>
       </section>
 
@@ -99,10 +122,10 @@
         </div>
       </section>
 
-      <!-- デモデータ初期化 -->
+      <!-- 危険操作 -->
       <div class="danger-zone">
-        <div class="danger-zone-title">デモデータ管理</div>
-        <div class="danger-zone-desc">現在の登録データを削除し、初期デモデータに戻します。デモ・開発時のみ使用してください。</div>
+        <div class="danger-zone-title">⚠ 危険操作</div>
+        <div class="danger-zone-desc">デモデータ初期化を実行すると、現在の登録データは削除されます。この操作は取り消せません。デモ・開発時のみ使用してください。</div>
         <button class="btn btn-danger btn-sm" onclick="resetDemoData()">デモデータ初期化</button>
       </div>
 
