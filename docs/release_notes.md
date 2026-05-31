@@ -135,6 +135,16 @@
 
 ---
 
+## Round 17：GitHub公開前最終確認
+
+- README 冒頭に `[!IMPORTANT]` / `[!WARNING]` 注意書き追加
+- 初期ログイン情報に「デモ用固定情報」の注記追加
+- スクリーンショット枠の「準備中」文言を削除（実際の画像が配置済みのため）
+- 「未実装機能」セクションを README に追加
+- `docs/known_limitations.md` に未実装機能テーブルを追加
+- `docs/portfolio_summary.md` に「公開時の位置づけ」追加
+- `docs/github_publish_checklist.md` にセクション11・12を追加
+
 ## Round 16：GitHub公開前整理
 
 - `.gitignore` に Playwright artifacts を追記
