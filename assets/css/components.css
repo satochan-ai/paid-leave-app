@@ -55,6 +55,37 @@
   width: 100%;
 }
 
+/* プロトタイプ注意書き */
+.prototype-note {
+  margin-top: 16px;
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* 危険操作セクション */
+.danger-zone {
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  padding: 16px 20px;
+  background-color: #fff5f5;
+  margin-top: 32px;
+}
+
+.danger-zone-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #dc2626;
+  margin-bottom: 8px;
+}
+
+.danger-zone-desc {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
 /* テーブル */
 .table-wrapper {
   overflow-x: auto;

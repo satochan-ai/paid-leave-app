@@ -35,6 +35,31 @@ function handleLogout() {
   logout();
 }
 
+/**
+ * デモデータを初期化する（管理者専用）
+ * paidLeave_ で始まるキーをすべて削除し、seedデータを再投入してログイン画面へ戻す
+ */
+function resetDemoData() {
+  if (!isAdmin()) return;
+  if (!confirm('デモデータを初期化します。現在の登録データは削除されます。よろしいですか？')) return;
+
+  // paidLeave_ で始まるキーをすべて削除
+  const keysToRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('paidLeave_')) keysToRemove.push(key);
+  }
+  keysToRemove.forEach((key) => localStorage.removeItem(key));
+
+  // 初期データを再投入
+  initializeSeedData();
+
+  // ログイン画面へ戻す
+  const depth = location.pathname.split('/').filter(Boolean).length;
+  const prefix = depth >= 3 ? '../../' : '';
+  location.href = prefix + 'index.html';
+}
+
 // ─────────────────────────────────────────
 // ログイン画面
 // ─────────────────────────────────────────
@@ -402,15 +427,25 @@ function renderMyPage() {
 
   const today = getToday();
 
-  // 管理者の場合も自分の employeeId で表示（なければ管理者表示）
+  // 管理者が mypage にアクセスした場合は専用メッセージを表示
+  if (isAdmin()) {
+    const main = document.querySelector('.page-content');
+    if (main) {
+      main.innerHTML = `
+        <div class="alert" style="background:#eff6ff; border:1px solid #93c5fd; color:#1e40af; padding:24px; border-radius:8px; margin-top:24px;">
+          <strong>管理者アカウントには社員マイページ情報がありません。</strong><br>
+          管理者ダッシュボードをご利用ください。
+          <div style="margin-top:16px;">
+            <a href="../../pages/admin/dashboard.html" class="btn btn-primary btn-sm">管理者ダッシュボードへ</a>
+          </div>
+        </div>`;
+    }
+    return;
+  }
+
   const empId = user.employeeId || null;
 
   if (!empId) {
-    // employeeId がない管理者アカウントは簡易表示
-    const nameEl = document.getElementById('myName');
-    if (nameEl) nameEl.textContent = user.name;
-    const metaEl = document.getElementById('myMeta');
-    if (metaEl) metaEl.textContent = user.email + '　（管理者アカウント）';
     const remEl = document.getElementById('myRemaining');
     if (remEl) remEl.textContent = '—';
     return;
@@ -780,6 +815,7 @@ function handleLeaveUsageFormSubmit(e, empId) {
 
 window.initializeApp = initializeApp;
 window.renderMyPage = renderMyPage;
+window.resetDemoData = resetDemoData;
 window.renderEmployeeFormPage = renderEmployeeFormPage;
 window.renderLeaveUsageFormPage = renderLeaveUsageFormPage;
 window.handleLogout = handleLogout;
