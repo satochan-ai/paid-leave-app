@@ -173,9 +173,70 @@ function registerLeaveUsage(employeeId, usageDate, usedDays, note) {
   return { success: true, usage };
 }
 
+/**
+ * 全社員（在籍・休職中）の有給付与チェックを一括実行する
+ * @param {string} currentDate - YYYY-MM-DD（省略時は今日）
+ * @returns {{ checkedEmployeeCount: number, createdGrantCount: number, createdGrants: Array }}
+ */
+function generateLeaveGrantsForAllEmployees(currentDate) {
+  const today = currentDate || getToday();
+  const employees = getAllEmployees().filter(
+    (e) => e.status === 'active' || e.status === 'leave'
+  );
+
+  const createdGrants = [];
+
+  employees.forEach((emp) => {
+    const newGrants = generateLeaveGrantsIfNeeded(emp.id, today);
+    newGrants.forEach((g) => {
+      createdGrants.push({
+        employeeId: g.employeeId,
+        employeeName: emp.name,
+        grantDate: g.grantDate,
+        grantedDays: g.grantedDays,
+        expireDate: g.expireDate,
+      });
+    });
+  });
+
+  return {
+    checkedEmployeeCount: employees.length,
+    createdGrantCount: createdGrants.length,
+    createdGrants,
+  };
+}
+
+/**
+ * 特定社員の有給付与チェックを実行する
+ * @param {string} employeeId
+ * @param {string} currentDate - YYYY-MM-DD（省略時は今日）
+ * @returns {{ employeeId: string, employeeName: string, createdGrantCount: number, createdGrants: Array }}
+ */
+function generateLeaveGrantsForEmployee(employeeId, currentDate) {
+  const today = currentDate || getToday();
+  const employee = getEmployeeById(employeeId);
+  const employeeName = employee ? employee.name : '';
+
+  const newGrants = generateLeaveGrantsIfNeeded(employeeId, today);
+  const createdGrants = newGrants.map((g) => ({
+    grantDate: g.grantDate,
+    grantedDays: g.grantedDays,
+    expireDate: g.expireDate,
+  }));
+
+  return {
+    employeeId,
+    employeeName,
+    createdGrantCount: createdGrants.length,
+    createdGrants,
+  };
+}
+
 // --- window公開 ---
 window.getLeaveGrantHistory = getLeaveGrantHistory;
 window.getLeaveUsageHistory = getLeaveUsageHistory;
 window.generateLeaveGrantsIfNeeded = generateLeaveGrantsIfNeeded;
+window.generateLeaveGrantsForAllEmployees = generateLeaveGrantsForAllEmployees;
+window.generateLeaveGrantsForEmployee = generateLeaveGrantsForEmployee;
 window.consumeLeave = consumeLeave;
 window.registerLeaveUsage = registerLeaveUsage;

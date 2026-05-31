@@ -43,6 +43,24 @@
         <a href="employee-form.html" class="btn btn-outline">社員追加へ</a>
       </div>
 
+      <!-- 有給付与チェック -->
+      <section class="section grant-check-section">
+        <h3 class="section-title">有給付与チェック</h3>
+        <p class="section-desc">入社日と現在日をもとに、付与されているべき有給休暇を確認し、不足分を自動付与します。</p>
+        <button class="btn btn-primary btn-sm" onclick="handleGenerateLeaveGrantsForAll()">全社員の付与チェックを実行</button>
+        <div id="grantCheckResult" class="grant-check-result" style="margin-top:16px;"></div>
+      </section>
+
+      <!-- CSV出力 -->
+      <section class="section">
+        <h3 class="section-title">CSV出力</h3>
+        <div class="csv-button-group">
+          <button class="btn btn-secondary btn-sm" onclick="exportEmployeesCsv()">社員一覧CSV</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportLeaveSummaryCsv()">有給残日数CSV</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportLeaveUsagesCsv()">有給取得履歴CSV</button>
+        </div>
+      </section>
+
       <!-- 失効予定アラート -->
       <section class="section">
         <h3 class="section-title">失効予定が近い社員（30日以内）</h3>
@@ -58,6 +76,26 @@
             </thead>
             <tbody id="expiringTableBody"></tbody>
           </table>
+        </div>
+      </section>
+
+      <!-- データ管理（バックアップ/復元） -->
+      <section class="section data-management-section">
+        <h3 class="section-title">データ管理</h3>
+        <p class="section-desc">localStorageに保存された有給管理データをJSON形式でバックアップ・復元できます。</p>
+        <div id="backupMessage" class="backup-message" style="display:none;"></div>
+        <div class="backup-actions">
+          <div class="backup-action-block">
+            <div class="backup-action-label">バックアップ</div>
+            <button class="btn btn-secondary btn-sm" id="backupDownloadBtn">バックアップをダウンロード</button>
+          </div>
+          <div class="backup-action-block">
+            <div class="backup-action-label">復元</div>
+            <div class="backup-restore-row">
+              <input type="file" id="backupFileInput" class="file-input" accept=".json,application/json">
+              <button class="btn btn-warning btn-sm" id="backupRestoreBtn">バックアップを復元</button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -80,11 +118,14 @@
   <script src="../../assets/js/leaveService.js"></script>
   <script src="../../assets/js/employeeService.js"></script>
   <script src="../../assets/js/validation.js"></script>
+  <script src="../../assets/js/csvService.js"></script>
+  <script src="../../assets/js/backupService.js"></script>
   <script src="../../assets/js/app.js"></script>
   <script>
     requireAdmin();
     initializeApp();
     renderAdminDashboard();
+    bindBackupRestoreActions();
   </script>
 </body>
 </html>

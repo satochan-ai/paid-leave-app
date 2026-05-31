@@ -162,8 +162,18 @@ function searchEmployees(keyword, status) {
 }
 
 // --- window公開 ---
+/**
+ * employeeId に紐づくログインユーザーを返す
+ * @param {string} employeeId
+ * @returns {object|null}
+ */
+function getUserByEmployeeId(employeeId) {
+  return getUsers().find((u) => u.employeeId === employeeId) || null;
+}
+
 window.getAllEmployees = getAllEmployees;
 window.getEmployeeById = getEmployeeById;
+window.getUserByEmployeeId = getUserByEmployeeId;
 window.createEmployee = createEmployee;
 window.updateEmployee = updateEmployee;
 window.deleteEmployee = deleteEmployee;

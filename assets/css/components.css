@@ -55,6 +55,93 @@
   width: 100%;
 }
 
+/* ログイン情報カード（管理者確認用） */
+.login-info-card {
+  border-left: 4px solid #f59e0b;
+  background-color: #fffbeb;
+}
+
+.login-info-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 0;
+  border-bottom: 1px solid #fde68a;
+}
+
+.login-info-row:last-of-type {
+  border-bottom: none;
+}
+
+.login-info-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #92400e;
+  min-width: 110px;
+}
+
+.login-info-value {
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.password-value {
+  font-family: monospace;
+  background-color: #fef3c7;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.login-info-missing {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.prototype-warning {
+  font-size: 11px;
+  color: #b45309;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #fde68a;
+  line-height: 1.5;
+}
+
+/* 有給付与チェック */
+.grant-check-result {
+  min-height: 0;
+}
+
+.grant-check-message {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.grant-created {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+.grant-none {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.grant-check-table {
+  margin-top: 0;
+}
+
+/* CSV出力ボタングループ */
+.csv-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 /* プロトタイプ注意書き */
 .prototype-note {
   margin-top: 16px;
@@ -62,6 +149,82 @@
   color: #9ca3af;
   text-align: center;
   line-height: 1.5;
+}
+
+/* 警告ボタン */
+.btn-warning {
+  background-color: #f59e0b;
+  color: #fff;
+}
+
+/* データ管理セクション */
+.data-management-section {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #f9fafb;
+}
+
+.section-desc {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.backup-action-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.backup-action-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.backup-restore-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.file-input {
+  font-size: 13px;
+  color: #374151;
+}
+
+/* バックアップ結果メッセージ */
+.backup-message {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.backup-message-success {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+.backup-message-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.backup-message-info {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #93c5fd;
 }
 
 /* 危険操作セクション */

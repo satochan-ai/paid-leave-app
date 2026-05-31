@@ -35,6 +35,161 @@ function handleLogout() {
   logout();
 }
 
+// ─────────────────────────────────────────
+// 有給付与チェック
+// ─────────────────────────────────────────
+
+/**
+ * 全社員付与チェックを実行し、ダッシュボードに結果を描画する
+ */
+function handleGenerateLeaveGrantsForAll() {
+  if (!isAdmin()) {
+    alert('有給付与チェックは管理者のみ利用できます。');
+    return;
+  }
+  const today = getToday();
+  const result = generateLeaveGrantsForAllEmployees(today);
+  renderGrantCheckResult(result);
+
+  // ダッシュボードのKPIを再描画
+  renderAdminDashboard();
+}
+
+/**
+ * 社員別付与チェックを実行し、結果メッセージを表示して画面を再描画する
+ * @param {string} employeeId
+ */
+function handleGenerateLeaveGrantsForEmployee(employeeId) {
+  if (!isAdmin()) {
+    alert('有給付与チェックは管理者のみ利用できます。');
+    return;
+  }
+  const today = getToday();
+  const result = generateLeaveGrantsForEmployee(employeeId, today);
+  renderEmployeeGrantCheckMessage(result);
+
+  // 社員詳細のサマリー・付与履歴を再描画
+  renderEmployeeLeaveSummary(employeeId, today);
+  renderLeaveGrantTable(employeeId, today);
+}
+
+/**
+ * 全社員付与チェック結果をダッシュボードに描画する
+ * @param {{ checkedEmployeeCount: number, createdGrantCount: number, createdGrants: Array }} result
+ */
+function renderGrantCheckResult(result) {
+  const el = document.getElementById('grantCheckResult');
+  if (!el) return;
+
+  if (result.createdGrantCount === 0) {
+    el.innerHTML = `
+      <div class="grant-check-message grant-none">
+        チェック対象：${esc(String(result.checkedEmployeeCount))}名 ／ 新たに付与する有給はありません。
+      </div>`;
+    return;
+  }
+
+  const rows = result.createdGrants
+    .map(
+      (g) => `
+    <tr>
+      <td>${esc(g.employeeName)}</td>
+      <td>${esc(g.grantDate)}</td>
+      <td>${g.grantedDays} 日</td>
+      <td>${esc(g.expireDate)}</td>
+    </tr>`
+    )
+    .join('');
+
+  el.innerHTML = `
+    <div class="grant-check-message grant-created">
+      チェック対象：${esc(String(result.checkedEmployeeCount))}名 ／ 新規付与：${result.createdGrantCount}件
+    </div>
+    <div class="table-wrapper" style="margin-top:12px;">
+      <table class="table grant-check-table">
+        <thead>
+          <tr><th>社員名</th><th>付与日</th><th>付与日数</th><th>失効日</th></tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+/**
+ * 社員別付与チェック結果をアラート表示する
+ * @param {{ employeeName: string, createdGrantCount: number, createdGrants: Array }} result
+ */
+function renderEmployeeGrantCheckMessage(result) {
+  const el = document.getElementById('employeeGrantCheckMessage');
+  if (!el) return;
+
+  if (result.createdGrantCount === 0) {
+    el.className = 'grant-check-message grant-none';
+    el.textContent = '新たに付与する有給はありません。';
+  } else {
+    const lines = result.createdGrants
+      .map((g) => `${g.grantDate} に ${g.grantedDays}日付与しました。`)
+      .join('　');
+    el.className = 'grant-check-message grant-created';
+    el.textContent = lines;
+  }
+  el.style.display = 'block';
+}
+
+// ─────────────────────────────────────────
+// バックアップ / 復元
+// ─────────────────────────────────────────
+
+/**
+ * バックアップ/復元エリアのボタンをバインドする
+ */
+function bindBackupRestoreActions() {
+  const downloadBtn = document.getElementById('backupDownloadBtn');
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', function () {
+      clearBackupMessage();
+      downloadBackupJson();
+      showBackupMessage('バックアップファイルのダウンロードを開始しました。', 'success');
+    });
+  }
+
+  const restoreBtn = document.getElementById('backupRestoreBtn');
+  if (restoreBtn) {
+    restoreBtn.addEventListener('click', function () {
+      clearBackupMessage();
+      const fileInput = document.getElementById('backupFileInput');
+      if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        showBackupMessage('復元するJSONファイルを選択してください。', 'error');
+        return;
+      }
+      handleBackupFileImport(fileInput.files[0]);
+    });
+  }
+}
+
+/**
+ * バックアップ/復元エリアにメッセージを表示する
+ * @param {string} message
+ * @param {'success'|'error'|'info'} type
+ */
+function showBackupMessage(message, type) {
+  const el = document.getElementById('backupMessage');
+  if (!el) return;
+  el.className = `backup-message backup-message-${type || 'info'}`;
+  el.textContent = message;
+  el.style.display = 'block';
+}
+
+/**
+ * バックアップ/復元エリアのメッセージをクリアする
+ */
+function clearBackupMessage() {
+  const el = document.getElementById('backupMessage');
+  if (!el) return;
+  el.textContent = '';
+  el.style.display = 'none';
+}
+
 /**
  * デモデータを初期化する（管理者専用）
  * paidLeave_ で始まるキーをすべて削除し、seedデータを再投入してログイン画面へ戻す
@@ -306,9 +461,50 @@ function renderEmployeeDetailPage() {
   if (backBtn) backBtn.href = 'employees.html';
 
   renderEmployeeBasicInfo(employee);
+  renderLoginInfoCard(empId);
   renderEmployeeLeaveSummary(empId, today);
   renderLeaveGrantTable(empId, today);
   renderLeaveUsageTable(empId);
+}
+
+/**
+ * 社員詳細画面にログイン情報カードを描画する（管理者のみ）
+ * @param {string} empId
+ */
+function renderLoginInfoCard(empId) {
+  const el = document.getElementById('loginInfoCard');
+  if (!el) return;
+  if (!isAdmin()) { el.style.display = 'none'; return; }
+
+  const loginUser = getUserByEmployeeId(empId);
+  const roleLabel = { admin: '管理者', employee: '社員' };
+
+  if (!loginUser) {
+    el.innerHTML = `
+      <div class="card login-info-card">
+        <h3 class="section-title">ログイン情報（管理者確認用）</h3>
+        <p class="login-info-missing">ログインユーザー情報が見つかりません。<br>社員編集画面でメールアドレス・パスワード・権限を確認してください。</p>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="card login-info-card">
+      <h3 class="section-title">ログイン情報（管理者確認用）</h3>
+      <div class="login-info-row">
+        <span class="login-info-label">ログインID</span>
+        <span class="login-info-value">${esc(loginUser.email)}</span>
+      </div>
+      <div class="login-info-row">
+        <span class="login-info-label">仮パスワード</span>
+        <span class="login-info-value password-value">${esc(loginUser.password)}</span>
+      </div>
+      <div class="login-info-row">
+        <span class="login-info-label">権限</span>
+        <span class="login-info-value">${esc(roleLabel[loginUser.role] || loginUser.role)}</span>
+      </div>
+      <p class="prototype-warning">このログイン情報はlocalStorageを使ったプロトタイプ用です。本番運用ではパスワードを平文表示しないでください。</p>
+    </div>`;
 }
 
 function _showDetailError(message) {
@@ -816,6 +1012,14 @@ function handleLeaveUsageFormSubmit(e, empId) {
 window.initializeApp = initializeApp;
 window.renderMyPage = renderMyPage;
 window.resetDemoData = resetDemoData;
+window.bindBackupRestoreActions = bindBackupRestoreActions;
+window.showBackupMessage = showBackupMessage;
+window.clearBackupMessage = clearBackupMessage;
+window.renderLoginInfoCard = renderLoginInfoCard;
+window.handleGenerateLeaveGrantsForAll = handleGenerateLeaveGrantsForAll;
+window.handleGenerateLeaveGrantsForEmployee = handleGenerateLeaveGrantsForEmployee;
+window.renderGrantCheckResult = renderGrantCheckResult;
+window.renderEmployeeGrantCheckMessage = renderEmployeeGrantCheckMessage;
 window.renderEmployeeFormPage = renderEmployeeFormPage;
 window.renderLeaveUsageFormPage = renderLeaveUsageFormPage;
 window.handleLogout = handleLogout;

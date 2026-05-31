@@ -38,6 +38,12 @@
         </div>
       </div>
 
+      <!-- CSV出力 -->
+      <div class="csv-button-group" style="margin-bottom:12px;">
+        <button class="btn btn-secondary btn-sm" onclick="exportEmployeesCsv()">社員一覧CSV</button>
+        <button class="btn btn-secondary btn-sm" onclick="exportLeaveSummaryCsv()">有給残日数CSV</button>
+      </div>
+
       <!-- 検索・フィルター -->
       <div class="toolbar">
         <input type="text" id="searchInput" class="form-control" style="max-width:260px;" placeholder="名前・メールで検索">
@@ -85,6 +91,7 @@
   <script src="../../assets/js/leaveService.js"></script>
   <script src="../../assets/js/employeeService.js"></script>
   <script src="../../assets/js/validation.js"></script>
+  <script src="../../assets/js/csvService.js"></script>
   <script src="../../assets/js/app.js"></script>
   <script>
     requireAdmin();

@@ -36,8 +36,12 @@
           <a href="employees.html" id="backBtn" class="btn btn-outline btn-sm">← 社員一覧へ戻る</a>
           <a href="#" id="editBtn" class="btn btn-outline btn-sm">編集</a>
           <a href="#" id="leaveRegisterBtn" class="btn btn-primary btn-sm">有給取得登録</a>
+          <button class="btn btn-secondary btn-sm" id="csvExportBtn">この社員のCSV出力</button>
+          <button class="btn btn-outline btn-sm" id="grantCheckBtn">この社員の付与チェック</button>
         </div>
       </div>
+
+      <div id="employeeGrantCheckMessage" class="grant-check-message" style="display:none; margin-bottom:16px;"></div>
 
       <!-- 基本情報 -->
       <section class="section">
@@ -46,6 +50,9 @@
           <div class="employee-info-grid" id="employeeInfo"></div>
         </div>
       </section>
+
+      <!-- ログイン情報（管理者確認用） -->
+      <section class="section" id="loginInfoCard"></section>
 
       <!-- 有給サマリー -->
       <section class="section">
@@ -103,11 +110,19 @@
   <script src="../../assets/js/leaveService.js"></script>
   <script src="../../assets/js/employeeService.js"></script>
   <script src="../../assets/js/validation.js"></script>
+  <script src="../../assets/js/csvService.js"></script>
   <script src="../../assets/js/app.js"></script>
   <script>
     requireAdmin();
     initializeApp();
     renderEmployeeDetailPage();
+    (function() {
+      const empId = new URLSearchParams(location.search).get('id');
+      const csvBtn = document.getElementById('csvExportBtn');
+      if (csvBtn && empId) csvBtn.addEventListener('click', function() { exportEmployeeDetailCsv(empId); });
+      const grantBtn = document.getElementById('grantCheckBtn');
+      if (grantBtn && empId) grantBtn.addEventListener('click', function() { handleGenerateLeaveGrantsForEmployee(empId); });
+    })();
   </script>
 </body>
 </html>
