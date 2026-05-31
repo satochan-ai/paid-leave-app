@@ -393,6 +393,120 @@ function renderLeaveUsageTable(empId) {
 }
 
 // ─────────────────────────────────────────
+// 社員マイページ
+// ─────────────────────────────────────────
+
+function renderMyPage() {
+  const user = getCurrentUser();
+  if (!user) return;
+
+  const today = getToday();
+
+  // 管理者の場合も自分の employeeId で表示（なければ管理者表示）
+  const empId = user.employeeId || null;
+
+  if (!empId) {
+    // employeeId がない管理者アカウントは簡易表示
+    const nameEl = document.getElementById('myName');
+    if (nameEl) nameEl.textContent = user.name;
+    const metaEl = document.getElementById('myMeta');
+    if (metaEl) metaEl.textContent = user.email + '　（管理者アカウント）';
+    const remEl = document.getElementById('myRemaining');
+    if (remEl) remEl.textContent = '—';
+    return;
+  }
+
+  const employee = getEmployeeById(empId);
+  if (!employee) return;
+
+  // 付与を最新化
+  generateLeaveGrantsIfNeeded(empId, today);
+
+  const summary = calculateLeaveSummary(empId, today);
+
+  // プロフィールヘッダー
+  const nameEl = document.getElementById('myName');
+  if (nameEl) nameEl.textContent = employee.name;
+
+  const metaEl = document.getElementById('myMeta');
+  if (metaEl) {
+    metaEl.textContent =
+      employee.email +
+      '　入社日：' + employee.hireDate +
+      '　' + getStatusLabel(employee.status);
+  }
+
+  const remEl = document.getElementById('myRemaining');
+  if (remEl) remEl.textContent = summary.activeRemainingDays;
+
+  // 有給サマリー
+  const summaryEl = document.getElementById('mySummary');
+  if (summaryEl) {
+    const cards = [
+      { label: '総付与日数', value: summary.totalGrantedDays, unit: '日' },
+      { label: '総取得日数', value: summary.totalUsedDays, unit: '日' },
+      { label: '次回付与日', value: summary.nextGrantDate || '—', unit: '' },
+      { label: '次回付与日数', value: summary.nextGrantDays != null ? summary.nextGrantDays : '—', unit: summary.nextGrantDays != null ? '日' : '' },
+      { label: '直近失効日', value: summary.nearestExpireDate || '—', unit: '' },
+      { label: '直近失効日数', value: summary.nearestExpireDays > 0 ? summary.nearestExpireDays : '—', unit: summary.nearestExpireDays > 0 ? '日' : '' },
+    ];
+    summaryEl.innerHTML = cards
+      .map(
+        (c) => `
+      <div class="card">
+        <div class="card-title">${esc(c.label)}</div>
+        <div class="card-value">${esc(String(c.value))}<span class="card-unit">${esc(c.unit)}</span></div>
+      </div>`
+      )
+      .join('');
+  }
+
+  // 付与履歴
+  const grantTbody = document.getElementById('myGrantHistoryBody');
+  if (grantTbody) {
+    const grants = getLeaveGrantHistory(empId);
+    if (grants.length === 0) {
+      grantTbody.innerHTML = '<tr><td colspan="6" class="empty-row">付与履歴はありません</td></tr>';
+    } else {
+      grantTbody.innerHTML = grants
+        .map((g) => {
+          const expired = isExpired(g.expireDate, today);
+          return `
+          <tr class="${expired ? 'row-expired' : ''}">
+            <td>${esc(g.grantDate)}</td>
+            <td>${g.grantedDays} 日</td>
+            <td>${g.usedDays} 日</td>
+            <td>${g.remainingDays} 日</td>
+            <td>${esc(g.expireDate)}</td>
+            <td><span class="badge ${expired ? 'badge-retired' : 'badge-active'}">${expired ? '失効済み' : '未失効'}</span></td>
+          </tr>`;
+        })
+        .join('');
+    }
+  }
+
+  // 取得履歴
+  const usageTbody = document.getElementById('myUsageHistoryBody');
+  if (usageTbody) {
+    const usages = getLeaveUsageHistory(empId);
+    if (usages.length === 0) {
+      usageTbody.innerHTML = '<tr><td colspan="3" class="empty-row">取得履歴はありません</td></tr>';
+    } else {
+      usageTbody.innerHTML = usages
+        .map(
+          (u) => `
+        <tr>
+          <td>${esc(u.usageDate)}</td>
+          <td>${u.usedDays} 日</td>
+          <td>${esc(u.note || '—')}</td>
+        </tr>`
+        )
+        .join('');
+    }
+  }
+}
+
+// ─────────────────────────────────────────
 // フォーム共通ユーティリティ
 // ─────────────────────────────────────────
 
@@ -665,6 +779,7 @@ function handleLeaveUsageFormSubmit(e, empId) {
 // ─────────────────────────────────────────
 
 window.initializeApp = initializeApp;
+window.renderMyPage = renderMyPage;
 window.renderEmployeeFormPage = renderEmployeeFormPage;
 window.renderLeaveUsageFormPage = renderLeaveUsageFormPage;
 window.handleLogout = handleLogout;
