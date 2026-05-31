@@ -5,6 +5,33 @@
 
 ---
 
+## 画像保存先
+
+撮影した画像は以下に保存してください。
+
+```
+docs/images/
+```
+
+### 推奨ファイル名
+
+| ファイル名 | 内容 |
+|-----------|------|
+| `01_login.png` | ログイン画面 |
+| `02_admin_dashboard.png` | 管理者ダッシュボード |
+| `03_employee_list.png` | 社員一覧 |
+| `04_employee_detail.png` | 社員詳細 |
+| `05_login_info_card.png` | 仮ログイン情報カード |
+| `06_leave_usage_form.png` | 有給取得登録 |
+| `07_employee_mypage.png` | 社員マイページ |
+| `08_csv_export.png` | CSV出力セクション |
+| `09_backup_restore.png` | バックアップ/復元セクション |
+| `10_grant_check.png` | 有給付与チェックセクション |
+
+画像を配置後、`README.md` のスクリーンショット枠に自動的に表示されます。
+
+---
+
 ## 撮影前の共通準備
 
 1. デモデータ初期化を実行してクリーンな状態にする
