@@ -135,6 +135,17 @@
 
 ---
 
+## Round 18：GitHub公開・公開後確認
+
+- GitHubリポジトリ（satochan-ai/paid-leave-app）をpublicで公開
+- masterブランチをmainにリネームしてpush
+- GitHub Pages設定（main / root）
+- READMEにデモURL追加（https://satochan-ai.github.io/paid-leave-app/）
+- `docs/github_pages_check_report.md` 作成
+- `docs/github_publish_checklist.md` にRound18完了状況追記
+
+---
+
 ## Round 17：GitHub公開前最終確認
 
 - README 冒頭に `[!IMPORTANT]` / `[!WARNING]` 注意書き追加

@@ -52,14 +52,12 @@
 - [ ] コミットメッセージが分かりやすい
 - [ ] `.gitignore` が適切に設定されている（node_modules 等があれば）
 
-## 7. GitHub Pages（オプション）
+## 7. GitHub Pages（Round18完了）
 
-GitHub Pagesで公開する場合の追加確認：
-
-- [ ] リポジトリをPublicに設定する
-- [ ] Settings → Pages → Source を `main` ブランチ / `/(root)` に設定する
-- [ ] 公開URL（`https://ユーザー名.github.io/リポジトリ名/`）でアクセスできる
-- [ ] `README.md` に公開URLを追記する
+- [x] リポジトリをPublicに設定済み
+- [x] Settings → Pages → Source を `main` ブランチ / `/(root)` に設定
+- [x] 公開URL：https://satochan-ai.github.io/paid-leave-app/
+- [x] `README.md` に公開URLを追記済み
 
 **注意：** GitHub PagesでもlocalStorageは閲覧者のブラウザごとに独立しています。
 管理者と社員のデータがサーバーで共有されるわけではありません。
