@@ -27,6 +27,7 @@ docs/images/
 | `08_csv_export.png` | CSV出力セクション |
 | `09_backup_restore.png` | バックアップ/復元セクション |
 | `10_grant_check.png` | 有給付与チェックセクション |
+| `11_proportional_employee_detail.png` | 比例付与社員詳細（佐藤花子） |
 
 画像を配置後、`README.md` のスクリーンショット枠に自動的に表示されます。
 
@@ -47,7 +48,9 @@ npm install
 npm run screenshots
 ```
 
-外部サーバーの起動は不要です（スクリプト内に Node.js の HTTP サーバーを内蔵しています）。  
+外部サーバーの起動は不要です（スクリプト内に Node.js の HTTP サーバーを内蔵しています）。
+
+Round20時点で11枚を自動撮影します（`01_login.png` 〜 `11_proportional_employee_detail.png`）。  
 撮影結果は `docs/images/` に保存されます。
 
 ---

@@ -31,6 +31,10 @@ const EMPLOYEE_USER = JSON.stringify({
   id: 'user_emp_001', employeeId: 'emp_001', name: '山田 太郎',
   email: 'yamada@example.com', password: 'password123', role: 'employee',
 });
+const PROPORTIONAL_USER = JSON.stringify({
+  id: 'user_emp_002', employeeId: 'emp_002', name: '佐藤 花子',
+  email: 'sato@example.com', password: 'password123', role: 'employee',
+});
 
 // MIME types
 const MIME = {
@@ -188,6 +192,17 @@ async function main() {
       await wait(300);
       await page.screenshot({ path: `${IMAGES_DIR}/${file}` });
       console.log(`✅ ${label}`);
+      await page.close();
+    }
+
+    // ─── 11. 比例付与社員詳細（佐藤花子） ────────────────────
+    {
+      const page = await adminCtx.newPage();
+      await page.goto(`${BASE_URL}/pages/admin/employee-detail.html?id=emp_002`);
+      await page.waitForLoadState('networkidle');
+      await wait(600);
+      await page.screenshot({ path: `${IMAGES_DIR}/11_proportional_employee_detail.png` });
+      console.log('✅ 11_proportional_employee_detail.png');
       await page.close();
     }
 

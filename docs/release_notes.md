@@ -135,6 +135,20 @@
 
 ---
 
+## Round 20：比例付与対応後の公開版確認・スクリーンショット更新
+
+- 比例付与対応後の画面確認（社員一覧・社員詳細・マイページ）
+- `npm run screenshots` で全11枚のスクリーンショットを再撮影
+- `docs/images/11_proportional_employee_detail.png` 新規追加（佐藤花子の比例付与詳細）
+- README に比例付与テーブル・説明・スクリーンショットを追記
+- README の初期ログイン情報に佐藤花子（sato@example.com）を追加
+- README のコンソールテスト例を比例付与対応版に更新
+- `scripts/take_screenshots.mjs` に11枚目の撮影処理を追加
+- `docs/screenshot_checklist.md` に12項目目を追加
+- `docs/screenshot_guide.md` のファイル名一覧を更新
+
+---
+
 ## Round 19：比例付与対応
 
 - 社員データに勤務条件を追加（workType / weeklyWorkDays / weeklyWorkHours / annualWorkDays）
