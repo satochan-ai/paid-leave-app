@@ -349,6 +349,69 @@ function exportEmployeeDetailCsv(employeeId) {
 }
 
 // ─────────────────────────────────────────
+// CSV出力5：有給申請履歴CSV
+// ─────────────────────────────────────────
+
+/**
+ * 有給申請履歴をCSV出力する（管理者専用）
+ * 並び順：申請日降順 → 取得希望日降順 → 社員名昇順
+ */
+function exportLeaveRequestsCsv() {
+  if (!isAdmin()) {
+    alert('CSV出力は管理者のみ利用できます。');
+    return;
+  }
+
+  const headers = [
+    '申請ID', '社員ID', '社員名', 'メールアドレス',
+    '申請日', '取得希望日', '取得日数', '申請理由', 'ステータス',
+    '承認者ID', '承認日時', '却下者ID', '却下日時', '却下理由',
+    '作成日時', '更新日時',
+  ];
+
+  const requests = getLeaveRequests().sort((a, b) => {
+    // 申請日降順
+    if (a.requestDate !== b.requestDate) return a.requestDate > b.requestDate ? -1 : 1;
+    // 取得希望日降順
+    if (a.usageDate !== b.usageDate) return a.usageDate > b.usageDate ? -1 : 1;
+    // 社員名昇順
+    const empA = getEmployeeById(a.employeeId);
+    const empB = getEmployeeById(b.employeeId);
+    const nameA = empA ? empA.name : '';
+    const nameB = empB ? empB.name : '';
+    return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+  });
+
+  const rows = requests.map((r) => {
+    const emp = getEmployeeById(r.employeeId);
+    // ステータスラベル（leaveRequestService.js が読まれていれば使用、なければフォールバック）
+    const statusLabel = typeof getLeaveRequestStatusLabel === 'function'
+      ? getLeaveRequestStatusLabel(r.status)
+      : r.status;
+    return [
+      r.id,
+      r.employeeId,
+      emp ? emp.name : '不明',
+      emp ? emp.email : '',
+      r.requestDate   || '',
+      r.usageDate     || '',
+      r.usedDays,
+      r.reason        || '',
+      statusLabel,
+      r.approvedBy    || '',
+      r.approvedAt    || '',
+      r.rejectedBy    || '',
+      r.rejectedAt    || '',
+      r.rejectReason  || '',
+      r.createdAt     || '',
+      r.updatedAt     || '',
+    ];
+  });
+
+  downloadCsv(`leave_requests_${formatCsvDateTime()}.csv`, headers, rows);
+}
+
+// ─────────────────────────────────────────
 // window公開
 // ─────────────────────────────────────────
 
@@ -360,3 +423,4 @@ window.exportEmployeesCsv = exportEmployeesCsv;
 window.exportLeaveSummaryCsv = exportLeaveSummaryCsv;
 window.exportLeaveUsagesCsv = exportLeaveUsagesCsv;
 window.exportEmployeeDetailCsv = exportEmployeeDetailCsv;
+window.exportLeaveRequestsCsv = exportLeaveRequestsCsv;

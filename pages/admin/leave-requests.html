@@ -40,6 +40,11 @@
         <a href="dashboard.html" class="btn btn-outline btn-sm">← ダッシュボード</a>
       </div>
 
+      <!-- CSV出力 -->
+      <div class="csv-button-group" style="margin-bottom:12px;">
+        <button class="btn btn-secondary btn-sm" onclick="exportLeaveRequestsCsv()">有給申請履歴CSV</button>
+      </div>
+
       <!-- ステータスフィルター -->
       <div class="toolbar" style="margin-bottom:16px;">
         <label for="requestStatusFilter" style="font-size:13px; color:#374151;">ステータス絞り込み：</label>
@@ -82,8 +87,8 @@
   <script src="../../assets/js/leaveCalculator.js"></script>
   <script src="../../assets/js/leaveService.js"></script>
   <script src="../../assets/js/employeeService.js"></script>
-  <script src="../../assets/js/validation.js"></script>
   <script src="../../assets/js/leaveRequestService.js"></script>
+  <script src="../../assets/js/validation.js"></script>
   <script src="../../assets/js/csvService.js"></script>
   <script src="../../assets/js/backupService.js"></script>
   <script src="../../assets/js/app.js"></script>

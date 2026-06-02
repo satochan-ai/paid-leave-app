@@ -135,6 +135,19 @@
 
 ---
 
+## Round 23：有給申請履歴CSV出力
+
+- `csvService.js` に `exportLeaveRequestsCsv()` を追加
+- 管理者ダッシュボードの「CSV出力」セクションに「有給申請履歴CSV」ボタンを追加
+- 有給申請一覧画面（`leave-requests.html`）に「有給申請履歴CSV」ボタンを追加
+- スクリプト読み込み順を整備（leaveRequestService.js → validation.js → csvService.js）
+- CSVはBOM付きUTF-8、ステータスは日本語で出力
+- `docs/csv_export_spec.md` に有給申請履歴CSVの仕様を追記
+- `docs/leave_request_spec.md` にCSV出力セクションを追記
+- README.md に有給申請履歴CSV出力を追記
+
+---
+
 ## Round 22：有給申請フローのスクリーンショット更新・README/docs整備
 
 - `scripts/take_screenshots.mjs` に申請関連3枚の撮影処理を追加

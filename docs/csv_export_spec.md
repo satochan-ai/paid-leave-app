@@ -8,6 +8,7 @@
 | 有給残日数一覧CSV | `leave_summary_YYYYMMDD_HHMMSS.csv` | ダッシュボード・社員一覧 |
 | 有給取得履歴CSV | `leave_usages_YYYYMMDD_HHMMSS.csv` | ダッシュボード |
 | 社員別詳細CSV | `employee_detail_社員名_YYYYMMDD_HHMMSS.csv` | 社員詳細 |
+| **有給申請履歴CSV** | `leave_requests_YYYYMMDD_HHMMSS.csv` | **ダッシュボード・有給申請一覧** |
 
 ## 文字コード
 
@@ -83,6 +84,45 @@ CRLF（`\r\n`）
 
 - セクション間は空行で区切る
 - ファイル名の社員名は OS予約文字（`\ / : * ? " < > |`）を `_` に置換
+
+---
+
+---
+
+## 有給申請履歴CSV（Round23追加）
+
+### ファイル名
+
+`leave_requests_YYYYMMDD_HHMMSS.csv`
+
+### ヘッダー
+
+```
+申請ID, 社員ID, 社員名, メールアドレス, 申請日, 取得希望日, 取得日数, 申請理由,
+ステータス, 承認者ID, 承認日時, 却下者ID, 却下日時, 却下理由, 作成日時, 更新日時
+```
+
+### ステータス表示（日本語）
+
+| 内部値 | 表示 |
+|--------|------|
+| pending | 申請中 |
+| approved | 承認済み |
+| rejected | 却下 |
+| cancelled | 取消 |
+
+### 並び順
+
+申請日降順 → 取得希望日降順 → 社員名昇順
+
+### 権限
+
+管理者のみ出力可能
+
+### 出力画面
+
+- 管理者ダッシュボードの「CSV出力」セクション
+- 有給申請一覧画面（`pages/admin/leave-requests.html`）
 
 ---
 
