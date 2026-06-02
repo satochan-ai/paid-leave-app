@@ -79,6 +79,46 @@
 
 ---
 
+### leaveRequests（有給申請）
+
+```json
+{
+  "id": "request_xxx",
+  "employeeId": "emp_001",
+  "requestDate": "2026-06-01",
+  "usageDate": "2026-06-10",
+  "usedDays": 1,
+  "reason": "私用のため",
+  "status": "pending",
+  "approvedBy": "",
+  "approvedAt": "",
+  "rejectedBy": "",
+  "rejectedAt": "",
+  "rejectReason": "",
+  "createdAt": "2026-06-01T10:00:00.000Z",
+  "updatedAt": "2026-06-01T10:00:00.000Z"
+}
+```
+
+| フィールド | 型 | 説明 |
+|-----------|-----|------|
+| id | string | 申請ID（"request_" + ランダム文字列） |
+| employeeId | string | 申請した社員ID |
+| requestDate | string | 申請日（YYYY-MM-DD） |
+| usageDate | string | 取得希望日（YYYY-MM-DD） |
+| usedDays | number | 取得日数（0.5 または 1以上の整数） |
+| reason | string | 申請理由（任意） |
+| status | "pending" \| "approved" \| "rejected" \| "cancelled" | 申請ステータス |
+| approvedBy | string | 承認した管理者ユーザーID |
+| approvedAt | string | 承認日時（ISO8601） |
+| rejectedBy | string | 却下した管理者ユーザーID |
+| rejectedAt | string | 却下日時（ISO8601） |
+| rejectReason | string | 却下理由 |
+| createdAt | string | 作成日時（ISO8601） |
+| updatedAt | string | 更新日時（ISO8601） |
+
+---
+
 ### leaveGrants（有給付与履歴）
 
 ```json

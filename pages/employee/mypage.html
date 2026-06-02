@@ -50,6 +50,32 @@
         </div>
       </section>
 
+      <!-- 有給申請フォーム -->
+      <section class="section leave-request-section" id="leaveRequestSection">
+        <h3 class="section-title">有給申請</h3>
+        <div id="leaveRequestForm"></div>
+      </section>
+
+      <!-- 申請履歴 -->
+      <section class="section leave-request-history" id="leaveRequestHistorySection">
+        <h3 class="section-title">申請履歴</h3>
+        <div class="table-wrapper">
+          <table class="table leave-request-table">
+            <thead>
+              <tr>
+                <th>申請日</th>
+                <th>取得希望日</th>
+                <th>取得日数</th>
+                <th>申請理由</th>
+                <th>ステータス</th>
+                <th>却下理由</th>
+              </tr>
+            </thead>
+            <tbody id="leaveRequestHistoryBody"></tbody>
+          </table>
+        </div>
+      </section>
+
       <!-- 付与履歴 -->
       <section class="section">
         <h3 class="section-title">付与履歴</h3>
@@ -103,6 +129,7 @@
   <script src="../../assets/js/leaveService.js"></script>
   <script src="../../assets/js/employeeService.js"></script>
   <script src="../../assets/js/validation.js"></script>
+  <script src="../../assets/js/leaveRequestService.js"></script>
   <script src="../../assets/js/app.js"></script>
   <script>
     requireLogin();

@@ -135,6 +135,25 @@
 
 ---
 
+## Round 21：有給申請・承認フロー
+
+- 社員マイページに有給申請フォームを追加（取得希望日・取得日数・申請理由）
+- 申請時は残日数を変更しない（pending で保存）
+- 管理者用「有給申請一覧」画面を新規追加（pages/admin/leave-requests.html）
+- 管理者が申請を承認 → 有給取得履歴に反映・残日数消化
+- 管理者が申請を却下 → 却下理由を保存・残日数は変更しない
+- ダッシュボードKPIに「未承認申請数」を追加
+- ダッシュボードに「有給申請一覧」クイックアクション追加
+- 全管理者ページのサイドバーに「有給申請一覧」リンクを追加
+- leaveRequests をバックアップ/復元対象に追加（古いバックアップとの互換性あり）
+- storage.js に getLeaveRequests / saveLeaveRequests を追加
+- leaveRequestService.js を新規作成
+- validation.js に validateLeaveRequestForm を追加
+- docs/leave_request_spec.md を新規作成
+- docs/data_model.md に leaveRequests のデータ構造を追記
+
+---
+
 ## Round 20：比例付与対応後の公開版確認・スクリーンショット更新
 
 - 比例付与対応後の画面確認（社員一覧・社員詳細・マイページ）

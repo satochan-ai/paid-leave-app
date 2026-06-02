@@ -25,6 +25,7 @@
       <li><a href="dashboard.html" class="active">ダッシュボード</a></li>
       <li><a href="employees.html">社員一覧</a></li>
       <li><a href="employee-form.html">社員追加</a></li>
+      <li><a href="leave-requests.html">有給申請一覧</a></li>
     </ul>
   </nav>
 
@@ -62,6 +63,10 @@
             <div class="quick-action-icon">💾</div>
             <div class="quick-action-label">バックアップ</div>
           </button>
+          <a href="leave-requests.html" class="quick-action-card">
+            <div class="quick-action-icon">📋</div>
+            <div class="quick-action-label">有給申請一覧</div>
+          </a>
         </div>
       </section>
 
@@ -143,6 +148,7 @@
   <script src="../../assets/js/validation.js"></script>
   <script src="../../assets/js/csvService.js"></script>
   <script src="../../assets/js/backupService.js"></script>
+  <script src="../../assets/js/leaveRequestService.js"></script>
   <script src="../../assets/js/app.js"></script>
   <script>
     requireAdmin();

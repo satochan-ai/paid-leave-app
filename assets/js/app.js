@@ -317,6 +317,7 @@ function renderAdminDashboard() {
   });
 
   // KPIカード描画
+  const pendingRequestCount = typeof getPendingLeaveRequestCount === 'function' ? getPendingLeaveRequestCount() : 0;
   const statsContainer = document.getElementById('statsContainer');
   if (statsContainer) {
     statsContainer.innerHTML = [
@@ -326,6 +327,7 @@ function renderAdminDashboard() {
       { label: '退職者数', value: retired, unit: '名', cls: '' },
       { label: '有給残日数合計', value: totalRemaining, unit: '日', cls: '' },
       { label: '失効予定（30日以内）', value: expiringCount, unit: '名', cls: expiringCount > 0 ? 'danger' : '' },
+      { label: '未承認申請数', value: pendingRequestCount, unit: '件', cls: pendingRequestCount > 0 ? 'warning' : '' },
     ]
       .map(
         (c) => `
@@ -733,6 +735,12 @@ function renderMyPage() {
       .join('');
   }
 
+  // 有給申請フォームと申請履歴（leaveRequestService.js が読み込まれている場合のみ）
+  if (typeof renderLeaveRequestForm === 'function') {
+    renderLeaveRequestForm(empId);
+    renderEmployeeLeaveRequestHistory(empId);
+  }
+
   // 付与履歴
   const grantTbody = document.getElementById('myGrantHistoryBody');
   if (grantTbody) {
@@ -1056,6 +1064,270 @@ function handleLeaveUsageFormSubmit(e, empId) {
 }
 
 // ─────────────────────────────────────────
+// 有給申請（社員マイページ）
+// ─────────────────────────────────────────
+
+/**
+ * 有給申請フォームを #leaveRequestForm に描画し、イベントをバインドする
+ * @param {string} employeeId
+ */
+function renderLeaveRequestForm(employeeId) {
+  const el = document.getElementById('leaveRequestForm');
+  if (!el) return;
+
+  // 管理者には申請フォームを表示しない
+  if (isAdmin()) {
+    el.innerHTML = '';
+    return;
+  }
+
+  const today = getToday();
+  el.innerHTML = `
+    <form id="leaveReqForm" novalidate>
+      <div id="leaveReqAlert" class="alert alert-error" style="display:none;"></div>
+      <div id="leaveReqSuccess" class="alert" style="display:none; background:#d1fae5; border:1px solid #6ee7b7; color:#065f46;"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="leaveReqDate">取得希望日 <span class="required">*</span></label>
+          <input type="date" id="leaveReqDate" class="form-control" min="${today}">
+          <p class="field-error" id="leaveReqDateError"></p>
+        </div>
+        <div class="form-group">
+          <label for="leaveReqDays">取得日数 <span class="required">*</span></label>
+          <select id="leaveReqDays" class="form-control">
+            <option value="">選択してください</option>
+            <option value="0.5">半休（0.5日）</option>
+            <option value="1">1日</option>
+          </select>
+          <p class="field-error" id="leaveReqDaysError"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="leaveReqReason">申請理由</label>
+        <textarea id="leaveReqReason" class="form-control" rows="2" placeholder="例：私用のため"></textarea>
+      </div>
+      <div class="form-actions" style="justify-content:flex-start;">
+        <button type="submit" class="btn btn-primary btn-sm">申請する</button>
+      </div>
+    </form>`;
+
+  const form = el.querySelector('#leaveReqForm');
+  if (form && !form.dataset.bound) {
+    form.dataset.bound = '1';
+    form.addEventListener('submit', (e) => handleLeaveRequestSubmit(e, employeeId));
+  }
+}
+
+/**
+ * 有給申請フォームのsubmitハンドラ
+ * @param {Event} event
+ * @param {string} employeeId
+ */
+function handleLeaveRequestSubmit(event, employeeId) {
+  event.preventDefault();
+
+  const alertEl  = document.getElementById('leaveReqAlert');
+  const successEl = document.getElementById('leaveReqSuccess');
+  if (alertEl)   { alertEl.style.display = 'none'; alertEl.textContent = ''; }
+  if (successEl) { successEl.style.display = 'none'; successEl.textContent = ''; }
+
+  // フィールドエラークリア
+  ['leaveReqDateError', 'leaveReqDaysError'].forEach((id) => {
+    const e = document.getElementById(id);
+    if (e) { e.textContent = ''; e.style.display = 'none'; }
+  });
+
+  const usageDate = document.getElementById('leaveReqDate') ? document.getElementById('leaveReqDate').value : '';
+  const usedDays  = document.getElementById('leaveReqDays') ? document.getElementById('leaveReqDays').value : '';
+  const reason    = document.getElementById('leaveReqReason') ? document.getElementById('leaveReqReason').value.trim() : '';
+
+  const result = createLeaveRequest(employeeId, usageDate, usedDays, reason);
+
+  if (!result.success) {
+    // フィールドエラー表示
+    if (result.errors) {
+      const dateErr = document.getElementById('leaveReqDateError');
+      if (dateErr && result.errors.usageDate) {
+        dateErr.textContent = result.errors.usageDate;
+        dateErr.style.display = 'block';
+      }
+      const daysErr = document.getElementById('leaveReqDaysError');
+      if (daysErr && result.errors.usedDays) {
+        daysErr.textContent = result.errors.usedDays;
+        daysErr.style.display = 'block';
+      }
+    }
+    if (alertEl) {
+      alertEl.textContent = result.message || '申請に失敗しました。';
+      alertEl.style.display = 'block';
+    }
+    return;
+  }
+
+  // 成功
+  if (successEl) {
+    successEl.textContent = `${result.request.usageDate} の有給申請を受け付けました。管理者の承認をお待ちください。`;
+    successEl.style.display = 'block';
+  }
+
+  // フォームリセット
+  const form = document.getElementById('leaveReqForm');
+  if (form) {
+    form.reset();
+    delete form.dataset.bound;
+  }
+
+  // 申請履歴を再描画
+  renderEmployeeLeaveRequestHistory(employeeId);
+
+  // フォームを再バインド
+  renderLeaveRequestForm(employeeId);
+}
+
+/**
+ * 社員の申請履歴を #leaveRequestHistoryBody に描画する
+ * @param {string} employeeId
+ */
+function renderEmployeeLeaveRequestHistory(employeeId) {
+  const tbody = document.getElementById('leaveRequestHistoryBody');
+  if (!tbody) return;
+
+  const requests = getLeaveRequestsByEmployeeId(employeeId);
+  if (requests.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-row">申請履歴はありません</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = requests
+    .map((r) => `
+      <tr>
+        <td>${esc(r.requestDate)}</td>
+        <td>${esc(r.usageDate)}</td>
+        <td>${r.usedDays} 日</td>
+        <td>${esc(r.reason || '—')}</td>
+        <td><span class="badge ${esc(getLeaveRequestStatusBadgeClass(r.status))}">${esc(getLeaveRequestStatusLabel(r.status))}</span></td>
+        <td>${esc(r.rejectReason || '—')}</td>
+      </tr>`)
+    .join('');
+}
+
+// ─────────────────────────────────────────
+// 有給申請一覧（管理者）
+// ─────────────────────────────────────────
+
+/**
+ * 管理者：有給申請一覧ページを描画する
+ */
+function renderLeaveRequestsPage() {
+  const filter = document.getElementById('requestStatusFilter');
+  const selectedStatus = filter ? filter.value : 'all';
+
+  let requests = getAllLeaveRequests();
+  if (selectedStatus !== 'all') {
+    requests = requests.filter((r) => r.status === selectedStatus);
+  }
+
+  renderLeaveRequestTable(requests);
+
+  // フィルター変更イベント（初回のみバインド）
+  if (filter && !filter.dataset.bound) {
+    filter.dataset.bound = '1';
+    filter.addEventListener('change', () => renderLeaveRequestsPage());
+  }
+}
+
+/**
+ * 申請一覧テーブルを描画する
+ * @param {Array} requests
+ */
+function renderLeaveRequestTable(requests) {
+  const tbody = document.getElementById('leaveRequestTableBody');
+  if (!tbody) return;
+
+  if (requests.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" class="empty-row">申請はありません</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = requests
+    .map((r) => {
+      const emp = getEmployeeById(r.employeeId);
+      const empName  = emp ? esc(emp.name)  : '—';
+      const empEmail = emp ? esc(emp.email) : '—';
+
+      const statusBadge = `<span class="badge ${esc(getLeaveRequestStatusBadgeClass(r.status))}">${esc(getLeaveRequestStatusLabel(r.status))}</span>`;
+      const actionAt = r.status === 'approved'
+        ? esc(r.approvedAt ? r.approvedAt.slice(0, 10) : '')
+        : r.status === 'rejected'
+          ? esc(r.rejectedAt ? r.rejectedAt.slice(0, 10) : '')
+          : '—';
+
+      const actionBtns = r.status === 'pending'
+        ? `<div class="request-actions">
+             <button class="btn btn-success btn-sm" onclick="handleApproveLeaveRequest('${esc(r.id)}')">承認</button>
+             <button class="btn btn-danger btn-sm"  onclick="handleRejectLeaveRequest('${esc(r.id)}')">却下</button>
+           </div>`
+        : '—';
+
+      return `
+        <tr>
+          <td>${esc(r.requestDate)}</td>
+          <td><strong>${empName}</strong></td>
+          <td class="text-muted">${empEmail}</td>
+          <td>${esc(r.usageDate)}</td>
+          <td>${r.usedDays} 日</td>
+          <td>${esc(r.reason || '—')}</td>
+          <td>${statusBadge}</td>
+          <td>${actionAt}</td>
+          <td>${actionBtns}</td>
+        </tr>`;
+    })
+    .join('');
+}
+
+/**
+ * 申請を承認するハンドラ
+ * @param {string} requestId
+ */
+function handleApproveLeaveRequest(requestId) {
+  if (!confirm('この申請を承認しますか？承認後に有給取得履歴へ反映されます。')) return;
+
+  const result = approveLeaveRequest(requestId);
+  if (!result.success) {
+    alert('承認に失敗しました：' + (result.message || ''));
+    return;
+  }
+
+  alert('承認しました。有給取得履歴へ反映されました。');
+  renderLeaveRequestsPage();
+  // ダッシュボードKPIも更新（同ページであれば）
+  if (typeof renderAdminDashboard === 'function' && document.getElementById('statsContainer')) {
+    renderAdminDashboard();
+  }
+}
+
+/**
+ * 申請を却下するハンドラ
+ * @param {string} requestId
+ */
+function handleRejectLeaveRequest(requestId) {
+  const rejectReason = prompt('却下理由を入力してください（任意）：', '');
+  if (rejectReason === null) return; // キャンセル
+
+  const result = rejectLeaveRequest(requestId, rejectReason);
+  if (!result.success) {
+    alert('却下に失敗しました：' + (result.message || ''));
+    return;
+  }
+
+  alert('却下しました。');
+  renderLeaveRequestsPage();
+  if (typeof renderAdminDashboard === 'function' && document.getElementById('statsContainer')) {
+    renderAdminDashboard();
+  }
+}
+
+// ─────────────────────────────────────────
 // window 公開
 // ─────────────────────────────────────────
 
@@ -1086,5 +1358,12 @@ window.getStatusLabel = getStatusLabel;
 window.getStatusBadgeClass = getStatusBadgeClass;
 window._getWorkTypeBadgeClass = _getWorkTypeBadgeClass;
 window.isWithinDays = isWithinDays;
+window.renderLeaveRequestForm = renderLeaveRequestForm;
+window.handleLeaveRequestSubmit = handleLeaveRequestSubmit;
+window.renderEmployeeLeaveRequestHistory = renderEmployeeLeaveRequestHistory;
+window.renderLeaveRequestsPage = renderLeaveRequestsPage;
+window.renderLeaveRequestTable = renderLeaveRequestTable;
+window.handleApproveLeaveRequest = handleApproveLeaveRequest;
+window.handleRejectLeaveRequest = handleRejectLeaveRequest;
 
 document.addEventListener('DOMContentLoaded', initializeApp);

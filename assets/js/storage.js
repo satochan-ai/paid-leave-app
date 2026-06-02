@@ -11,6 +11,7 @@ const STORAGE_KEYS = {
   leaveGrants: 'paidLeave_leaveGrants',
   leaveUsages: 'paidLeave_leaveUsages',
   leaveOfAbsences: 'paidLeave_leaveOfAbsences',
+  leaveRequests: 'paidLeave_leaveRequests',
   currentUser: 'paidLeave_currentUser',
 };
 
@@ -97,6 +98,18 @@ function saveLeaveUsages(leaveUsages) {
   setData(STORAGE_KEYS.leaveUsages, leaveUsages);
 }
 
+// --- 有給申請 ---
+
+/** @returns {Array} */
+function getLeaveRequests() {
+  return getData(STORAGE_KEYS.leaveRequests, []);
+}
+
+/** @param {Array} leaveRequests */
+function saveLeaveRequests(leaveRequests) {
+  setData(STORAGE_KEYS.leaveRequests, leaveRequests);
+}
+
 // --- 休職 ---
 
 /** @returns {Array} */
@@ -124,3 +137,7 @@ function saveCurrentUserToStorage(user) {
 function removeCurrentUserFromStorage() {
   removeData(STORAGE_KEYS.currentUser);
 }
+
+// --- window公開 ---
+window.getLeaveRequests = getLeaveRequests;
+window.saveLeaveRequests = saveLeaveRequests;

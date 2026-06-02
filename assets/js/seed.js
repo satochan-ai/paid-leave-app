@@ -158,4 +158,7 @@ function initializeSeedData() {
 
   // --- 休職期間（初期は空） ---
   saveLeaveOfAbsences([]);
+
+  // --- 有給申請（初期は空） ---
+  saveLeaveRequests([]);
 }

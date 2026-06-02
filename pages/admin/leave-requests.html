@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>社員一覧 - 有給休暇管理アプリ</title>
+  <title>有給申請一覧 - 有給休暇管理アプリ</title>
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/layout.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
@@ -23,9 +23,9 @@
   <nav class="sidebar">
     <ul class="sidebar-nav">
       <li><a href="dashboard.html">ダッシュボード</a></li>
-      <li><a href="employees.html" class="active">社員一覧</a></li>
+      <li><a href="employees.html">社員一覧</a></li>
       <li><a href="employee-form.html">社員追加</a></li>
-      <li><a href="leave-requests.html">有給申請一覧</a></li>
+      <li><a href="leave-requests.html" class="active">有給申請一覧</a></li>
     </ul>
   </nav>
 
@@ -34,54 +34,40 @@
 
       <div class="page-header">
         <div>
-          <h2>社員一覧</h2>
-          <p class="page-description">在籍社員の有給状況を確認・管理します。</p>
+          <h2>有給申請一覧</h2>
+          <p class="page-description">社員からの有給申請を確認し、承認または却下できます。</p>
         </div>
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          <a href="employee-form.html" class="btn btn-primary btn-sm">+ 社員追加</a>
-          <a href="dashboard.html" class="btn btn-outline btn-sm">← ダッシュボード</a>
-        </div>
+        <a href="dashboard.html" class="btn btn-outline btn-sm">← ダッシュボード</a>
       </div>
 
-      <!-- CSV出力 -->
-      <div class="csv-button-group" style="margin-bottom:12px;">
-        <button class="btn btn-secondary btn-sm" onclick="exportEmployeesCsv()">社員一覧CSV</button>
-        <button class="btn btn-secondary btn-sm" onclick="exportLeaveSummaryCsv()">有給残日数CSV</button>
-      </div>
-
-      <!-- 検索・フィルター -->
-      <div class="toolbar">
-        <input type="text" id="searchInput" class="form-control" style="max-width:260px;" placeholder="名前・メールで検索">
-        <select id="statusFilter" class="form-control" style="max-width:140px;">
-          <option value="all">全て</option>
-          <option value="active">在籍</option>
-          <option value="leave">休職中</option>
-          <option value="retired">退職</option>
+      <!-- ステータスフィルター -->
+      <div class="toolbar" style="margin-bottom:16px;">
+        <label for="requestStatusFilter" style="font-size:13px; color:#374151;">ステータス絞り込み：</label>
+        <select id="requestStatusFilter" class="form-control" style="max-width:160px;">
+          <option value="all">すべて</option>
+          <option value="pending">申請中</option>
+          <option value="approved">承認済み</option>
+          <option value="rejected">却下</option>
         </select>
-        <button class="btn btn-outline" id="searchBtn">検索</button>
       </div>
 
-      <!-- 社員一覧テーブル -->
+      <!-- 申請一覧テーブル -->
       <div class="table-wrapper">
-        <table class="table">
+        <table class="table leave-request-table">
           <thead>
             <tr>
+              <th>申請日</th>
               <th>社員名</th>
               <th>メールアドレス</th>
-              <th>入社日</th>
+              <th>取得希望日</th>
+              <th>取得日数</th>
+              <th>申請理由</th>
               <th>ステータス</th>
-              <th>付与区分</th>
-              <th>総付与</th>
-              <th>総取得</th>
-              <th>残日数</th>
-              <th>次回付与日</th>
-              <th>次回付与</th>
-              <th>直近失効日</th>
-              <th>直近失効</th>
+              <th>処理日</th>
               <th>操作</th>
             </tr>
           </thead>
-          <tbody id="employeeTableBody"></tbody>
+          <tbody id="leaveRequestTableBody"></tbody>
         </table>
       </div>
 
@@ -97,12 +83,14 @@
   <script src="../../assets/js/leaveService.js"></script>
   <script src="../../assets/js/employeeService.js"></script>
   <script src="../../assets/js/validation.js"></script>
+  <script src="../../assets/js/leaveRequestService.js"></script>
   <script src="../../assets/js/csvService.js"></script>
+  <script src="../../assets/js/backupService.js"></script>
   <script src="../../assets/js/app.js"></script>
   <script>
     requireAdmin();
     initializeApp();
-    renderEmployeeListPage();
+    renderLeaveRequestsPage();
   </script>
 </body>
 </html>

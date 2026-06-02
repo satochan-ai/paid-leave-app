@@ -15,6 +15,7 @@ const BACKUP_TARGET_KEYS = [
   'paidLeave_leaveGrants',
   'paidLeave_leaveUsages',
   'paidLeave_leaveOfAbsences',
+  'paidLeave_leaveRequests',
 ];
 
 /**
@@ -50,6 +51,7 @@ function getBackupData() {
       leaveGrants: getLeaveGrants(),
       leaveUsages: getLeaveUsages(),
       leaveOfAbsences: getLeaveOfAbsences(),
+      leaveRequests: getLeaveRequests(),
     },
   };
 }
@@ -98,6 +100,7 @@ function validateBackupData(data) {
     return { valid: false, errors };
   }
 
+  // leaveRequests は古いバックアップには含まれない場合があるため必須チェックから除外
   const requiredArrays = ['users', 'employees', 'leaveGrants', 'leaveUsages', 'leaveOfAbsences'];
   requiredArrays.forEach((key) => {
     if (!Array.isArray(data.data[key])) {
@@ -134,6 +137,8 @@ function restoreBackupData(data) {
     saveLeaveGrants(data.data.leaveGrants);
     saveLeaveUsages(data.data.leaveUsages);
     saveLeaveOfAbsences(data.data.leaveOfAbsences);
+    // 古いバックアップには leaveRequests が存在しない場合があるため空配列でフォールバック
+    saveLeaveRequests(Array.isArray(data.data.leaveRequests) ? data.data.leaveRequests : []);
 
     // currentUser を削除してログイン画面へ戻す
     removeCurrentUserFromStorage();

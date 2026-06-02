@@ -224,6 +224,25 @@
   max-width: 680px;
 }
 
+/* 有給申請セクション */
+.leave-request-section,
+.leave-request-history {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  margin-bottom: 24px;
+}
+
+.leave-request-form .form-actions {
+  margin-top: 12px;
+}
+
+.leave-request-table th,
+.leave-request-table td {
+  font-size: 13px;
+}
+
 .form-section-title {
   font-size: 14px;
   font-weight: 600;

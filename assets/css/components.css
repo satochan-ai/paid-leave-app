@@ -317,6 +317,34 @@
   color: #1e40af;
 }
 
+/* 申請ステータスバッジ */
+.badge-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.badge-approved {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge-rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-cancelled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+/* 申請操作ボタン */
+.request-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
 /* 付与区分バッジ */
 .work-type-badge {
   font-size: 11px;

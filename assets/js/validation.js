@@ -158,7 +158,73 @@ function validateLeaveUsageForm(data) {
   return { valid: Object.keys(errors).length === 0, errors };
 }
 
+/**
+ * 有給申請フォームのバリデーション
+ * @param {object} data - { employeeId, usageDate, usedDays, reason }
+ * @returns {{ valid: boolean, errors: object }}
+ */
+function validateLeaveRequestForm(data) {
+  const errors = {};
+  const today = getToday();
+
+  if (!data.employeeId) {
+    errors.general = '申請する社員を特定できません。';
+  }
+
+  if (!data.usageDate) {
+    errors.usageDate = '取得希望日を入力してください。';
+  } else if (data.usageDate < today) {
+    errors.usageDate = '取得希望日は今日以降の日付を入力してください。';
+  }
+
+  const days = toNumber(data.usedDays);
+  if (data.usedDays === undefined || data.usedDays === null || data.usedDays === '') {
+    errors.usedDays = '取得日数を選択してください。';
+  } else if (days <= 0 || (days * 10) % 5 !== 0) {
+    errors.usedDays = '取得日数は0.5日単位で入力してください。';
+  }
+
+  // 退職済みチェック
+  if (data.employeeId) {
+    const employee = getEmployees().find((e) => e.id === data.employeeId);
+    if (employee && employee.status === 'retired') {
+      errors.general = '退職済み社員は有給申請できません。';
+    }
+  }
+
+  // 残日数チェック（取得希望日を基準日として計算）
+  if (
+    data.employeeId &&
+    data.usageDate &&
+    !data.usageDate < today &&
+    days > 0 &&
+    !errors.employeeId &&
+    !errors.usedDays
+  ) {
+    const summary = calculateLeaveSummary(data.employeeId, data.usageDate);
+    if (summary.activeRemainingDays < days) {
+      errors.usedDays = `有給残日数が不足しています。（残 ${summary.activeRemainingDays} 日）`;
+    }
+  }
+
+  // 重複申請チェック（同一社員・同一日付にpendingまたはapprovedがある場合は申請不可）
+  if (data.employeeId && data.usageDate && !errors.usageDate) {
+    const duplicate = getLeaveRequests().find(
+      (r) =>
+        r.employeeId === data.employeeId &&
+        r.usageDate === data.usageDate &&
+        (r.status === 'pending' || r.status === 'approved')
+    );
+    if (duplicate) {
+      errors.usageDate = 'この日付にはすでに申請中または承認済みの申請があります。';
+    }
+  }
+
+  return { valid: Object.keys(errors).length === 0, errors };
+}
+
 // --- window公開 ---
 window.validateLoginForm = validateLoginForm;
 window.validateEmployeeForm = validateEmployeeForm;
 window.validateLeaveUsageForm = validateLeaveUsageForm;
+window.validateLeaveRequestForm = validateLeaveRequestForm;
