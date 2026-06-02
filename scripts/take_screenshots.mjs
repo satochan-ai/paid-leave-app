@@ -305,6 +305,70 @@ async function main() {
       await page.close();
     }
 
+    // ─── 15. 申請中の取消ボタン（佐藤花子マイページ）────────────
+    const cancelCtx = await browser.newContext({ viewport: VIEWPORT });
+    const cancelSeed = await cancelCtx.newPage();
+    await cancelSeed.goto(`${BASE_URL}/index.html`);
+    await cancelSeed.waitForLoadState('networkidle');
+    await cancelSeed.evaluate(() => {
+      if (typeof window.initializeSeedData === 'function') window.initializeSeedData();
+      // pending申請を1件注入
+      const now = new Date().toISOString();
+      const today = now.slice(0, 10);
+      const future = new Date();
+      future.setDate(future.getDate() + 7);
+      const usageDate = future.toISOString().slice(0, 10);
+      const reqs = JSON.parse(localStorage.getItem('paidLeave_leaveRequests') || '[]');
+      // 既存の demo_cancel があれば削除してから追加
+      const filtered = reqs.filter((r) => r.id !== 'request_demo_cancel');
+      filtered.push({
+        id: 'request_demo_cancel', employeeId: 'emp_002',
+        requestDate: today, usageDate, usedDays: 1, reason: '私用のため',
+        status: 'pending', approvedBy: '', approvedAt: '',
+        rejectedBy: '', rejectedAt: '', rejectReason: '',
+        cancelledBy: '', cancelledAt: '',
+        createdAt: now, updatedAt: now,
+      });
+      localStorage.setItem('paidLeave_leaveRequests', JSON.stringify(filtered));
+    });
+    await cancelSeed.evaluate((u) => localStorage.setItem('paidLeave_currentUser', u), PROPORTIONAL_USER);
+    await cancelSeed.close();
+    {
+      const page = await cancelCtx.newPage();
+      await page.goto(`${BASE_URL}/pages/employee/mypage.html`);
+      await page.waitForLoadState('networkidle');
+      await wait(600);
+      // 申請履歴セクションまでスクロール（取消ボタンが見えるように）
+      const histSection = page.locator('#leaveRequestHistorySection');
+      if (await histSection.count() > 0) await histSection.scrollIntoViewIfNeeded();
+      await wait(400);
+      await page.screenshot({ path: `${IMAGES_DIR}/15_leave_request_cancel_button.png` });
+      console.log('✅ 15_leave_request_cancel_button.png');
+
+      // ─── 16. 取消済み申請状態（同コンテキストで取消後に撮影）───
+      await page.evaluate(() => {
+        const reqs = JSON.parse(localStorage.getItem('paidLeave_leaveRequests') || '[]');
+        reqs.forEach((r) => {
+          if (r.id === 'request_demo_cancel' && r.status === 'pending') {
+            r.status = 'cancelled';
+            r.cancelledBy = 'user_emp_002';
+            r.cancelledAt = new Date().toISOString();
+            r.updatedAt = new Date().toISOString();
+          }
+        });
+        localStorage.setItem('paidLeave_leaveRequests', JSON.stringify(reqs));
+        // 申請履歴を再描画
+        if (typeof renderEmployeeLeaveRequestHistory === 'function') {
+          renderEmployeeLeaveRequestHistory('emp_002');
+        }
+      });
+      await wait(400);
+      await page.screenshot({ path: `${IMAGES_DIR}/16_leave_request_cancelled.png` });
+      console.log('✅ 16_leave_request_cancelled.png');
+      await page.close();
+    }
+    await cancelCtx.close();
+
     await adminCtx.close();
   } finally {
     await browser.close();

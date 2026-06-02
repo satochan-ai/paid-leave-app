@@ -135,6 +135,20 @@
 
 ---
 
+## Round 25：申請取消機能のスクリーンショット更新
+
+- `scripts/take_screenshots.mjs` に15・16枚目の撮影処理を追加
+- `docs/images/15_leave_request_cancel_button.png` 新規追加（申請中の取消ボタン表示）
+- `docs/images/16_leave_request_cancelled.png` 新規追加（取消済み申請状態）
+- `README.md` に「有給申請の取消」セクション追加・スクリーンショット2枚追加
+- `docs/screenshot_guide.md` のファイル名一覧に2件追加・撮影枚数を16枚に更新
+- `docs/screenshot_checklist.md` に16・17項目目を追加
+- `docs/demo_scenario.md` に申請取消フロー（社員・管理者両方）のデモ手順を追加
+- `docs/portfolio_summary.md` に有給申請取消を追記
+- `docs/github_pages_check_report.md` に申請取消確認項目を追加
+
+---
+
 ## Round 24：有給申請取消機能
 
 - `leaveRequestService.js` に `cancelLeaveRequest(requestId)` を追加

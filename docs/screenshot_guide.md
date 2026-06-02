@@ -31,6 +31,8 @@ docs/images/
 | `12_leave_request_form.png` | 社員マイページの有給申請フォーム |
 | `13_leave_requests_admin.png` | 管理者の有給申請一覧画面 |
 | `14_leave_request_approved.png` | 承認済み申請状態 |
+| `15_leave_request_cancel_button.png` | 社員マイページの申請中・取消ボタン表示 |
+| `16_leave_request_cancelled.png` | 取消済み申請状態 |
 
 画像を配置後、`README.md` のスクリーンショット枠に自動的に表示されます。
 
@@ -53,7 +55,7 @@ npm run screenshots
 
 外部サーバーの起動は不要です（スクリプト内に Node.js の HTTP サーバーを内蔵しています）。
 
-Round22時点で14枚を自動撮影します（`01_login.png` 〜 `14_leave_request_approved.png`）。  
+Round25時点で16枚を自動撮影します（`01_login.png` 〜 `14_leave_request_approved.png`）。  
 撮影結果は `docs/images/` に保存されます。
 
 ---
