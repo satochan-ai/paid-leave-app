@@ -135,6 +135,17 @@
 
 ---
 
+## Round 26：最終リリース整理・README完成版化
+
+- `README.md` の管理者機能・社員機能・有給計算機能一覧を完成版に整理
+- `docs/known_limitations.md` から実装済み項目を削除し、現状に合わせて更新
+- `docs/future_roadmap.md` の優先度中を現状に合わせて更新
+- `docs/portfolio_summary.md` の実装済み機能・本番化対応表を最新化
+- `docs/round6_mvp_summary.md` のタイトルを「完成版サマリー（Round26時点）」に変更・未対応リストを整理
+- コード変更なし
+
+---
+
 ## Round 25：申請取消機能のスクリーンショット更新
 
 - `scripts/take_screenshots.mjs` に15・16枚目の撮影処理を追加
