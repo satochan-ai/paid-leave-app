@@ -135,6 +135,23 @@
 
 ---
 
+## Round 22：有給申請フローのスクリーンショット更新・README/docs整備
+
+- `scripts/take_screenshots.mjs` に申請関連3枚の撮影処理を追加
+- `docs/images/12_leave_request_form.png` 新規追加（社員マイページの有給申請フォーム）
+- `docs/images/13_leave_requests_admin.png` 新規追加（管理者の有給申請一覧画面）
+- `docs/images/14_leave_request_approved.png` 新規追加（承認済み申請状態）
+- `README.md` に有給申請・承認フローの説明・テーブル・スクリーンショットを追記
+- `README.md` のスクリーンショットセクションに3枚追加
+- `docs/screenshot_guide.md` のファイル名一覧に3件追加・撮影枚数を14枚に更新
+- `docs/screenshot_checklist.md` に13〜15項目目を追加
+- `docs/demo_scenario.md` に申請フロー（管理者・社員）のデモ手順を追加
+- `docs/portfolio_summary.md` に比例付与・有給申請フローを実装済み機能に追記
+- `docs/round6_mvp_summary.md` に Round19〜22 の機能追記
+- `docs/github_pages_check_report.md` に申請フロー確認項目を追加
+
+---
+
 ## Round 21：有給申請・承認フロー
 
 - 社員マイページに有給申請フォームを追加（取得希望日・取得日数・申請理由）

@@ -28,6 +28,9 @@ docs/images/
 | `09_backup_restore.png` | バックアップ/復元セクション |
 | `10_grant_check.png` | 有給付与チェックセクション |
 | `11_proportional_employee_detail.png` | 比例付与社員詳細（佐藤花子） |
+| `12_leave_request_form.png` | 社員マイページの有給申請フォーム |
+| `13_leave_requests_admin.png` | 管理者の有給申請一覧画面 |
+| `14_leave_request_approved.png` | 承認済み申請状態 |
 
 画像を配置後、`README.md` のスクリーンショット枠に自動的に表示されます。
 
@@ -50,7 +53,7 @@ npm run screenshots
 
 外部サーバーの起動は不要です（スクリプト内に Node.js の HTTP サーバーを内蔵しています）。
 
-Round20時点で11枚を自動撮影します（`01_login.png` 〜 `11_proportional_employee_detail.png`）。  
+Round22時点で14枚を自動撮影します（`01_login.png` 〜 `14_leave_request_approved.png`）。  
 撮影結果は `docs/images/` に保存されます。
 
 ---

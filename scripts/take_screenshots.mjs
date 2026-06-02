@@ -206,6 +206,105 @@ async function main() {
       await page.close();
     }
 
+    // ─── 12. 有給申請フォーム（佐藤花子マイページ）────────────
+    const propReqCtx = await browser.newContext({ viewport: VIEWPORT });
+    const propReqSeed = await propReqCtx.newPage();
+    await propReqSeed.goto(`${BASE_URL}/index.html`);
+    await propReqSeed.waitForLoadState('networkidle');
+    await propReqSeed.evaluate(() => {
+      if (typeof window.initializeSeedData === 'function') window.initializeSeedData();
+      // pending申請を1件注入（今日から7日後）
+      const now = new Date().toISOString();
+      const today = now.slice(0, 10);
+      const future = new Date();
+      future.setDate(future.getDate() + 7);
+      const usageDate = future.toISOString().slice(0, 10);
+      const reqs = JSON.parse(localStorage.getItem('paidLeave_leaveRequests') || '[]');
+      reqs.push({
+        id: 'request_demo_001', employeeId: 'emp_002',
+        requestDate: today, usageDate, usedDays: 1, reason: '私用のため',
+        status: 'pending', approvedBy: '', approvedAt: '',
+        rejectedBy: '', rejectedAt: '', rejectReason: '',
+        createdAt: now, updatedAt: now,
+      });
+      localStorage.setItem('paidLeave_leaveRequests', JSON.stringify(reqs));
+    });
+    await propReqSeed.evaluate((u) => localStorage.setItem('paidLeave_currentUser', u), PROPORTIONAL_USER);
+    await propReqSeed.close();
+    {
+      const page = await propReqCtx.newPage();
+      await page.goto(`${BASE_URL}/pages/employee/mypage.html`);
+      await page.waitForLoadState('networkidle');
+      await wait(600);
+      // 申請フォームセクションまでスクロール
+      const reqSection = page.locator('#leaveRequestSection');
+      if (await reqSection.count() > 0) await reqSection.scrollIntoViewIfNeeded();
+      await wait(400);
+      await page.screenshot({ path: `${IMAGES_DIR}/12_leave_request_form.png` });
+      console.log('✅ 12_leave_request_form.png');
+      await page.close();
+    }
+    await propReqCtx.close();
+
+    // ─── 13. 管理者：有給申請一覧（pending申請あり）─────────────
+    {
+      const page = await adminCtx.newPage();
+      await page.goto(`${BASE_URL}/index.html`);
+      await page.waitForLoadState('networkidle');
+      await page.evaluate(() => {
+        if (typeof window.initializeSeedData === 'function') window.initializeSeedData();
+        const now = new Date().toISOString();
+        const today = now.slice(0, 10);
+        const future = new Date();
+        future.setDate(future.getDate() + 7);
+        const usageDate = future.toISOString().slice(0, 10);
+        const reqs = JSON.parse(localStorage.getItem('paidLeave_leaveRequests') || '[]');
+        if (!reqs.find((r) => r.id === 'request_demo_001')) {
+          reqs.push({
+            id: 'request_demo_001', employeeId: 'emp_002',
+            requestDate: today, usageDate, usedDays: 1, reason: '私用のため',
+            status: 'pending', approvedBy: '', approvedAt: '',
+            rejectedBy: '', rejectedAt: '', rejectReason: '',
+            createdAt: now, updatedAt: now,
+          });
+          localStorage.setItem('paidLeave_leaveRequests', JSON.stringify(reqs));
+        }
+      });
+      await page.goto(`${BASE_URL}/pages/admin/leave-requests.html`);
+      await page.waitForLoadState('networkidle');
+      await wait(600);
+      await page.screenshot({ path: `${IMAGES_DIR}/13_leave_requests_admin.png` });
+      console.log('✅ 13_leave_requests_admin.png');
+      await page.close();
+    }
+
+    // ─── 14. 承認済み申請状態 ──────────────────────────────────
+    {
+      const page = await adminCtx.newPage();
+      await page.goto(`${BASE_URL}/pages/admin/leave-requests.html`);
+      await page.waitForLoadState('networkidle');
+      await wait(400);
+      // 申請を承認済みに変更してテーブルを再描画
+      await page.evaluate(() => {
+        const reqs = JSON.parse(localStorage.getItem('paidLeave_leaveRequests') || '[]');
+        reqs.forEach((r) => {
+          if (r.id === 'request_demo_001' && r.status === 'pending') {
+            r.status = 'approved';
+            r.approvedBy = 'user_admin_001';
+            r.approvedAt = new Date().toISOString();
+            r.updatedAt = new Date().toISOString();
+          }
+        });
+        localStorage.setItem('paidLeave_leaveRequests', JSON.stringify(reqs));
+        // テーブル再描画
+        if (typeof renderLeaveRequestsPage === 'function') renderLeaveRequestsPage();
+      });
+      await wait(400);
+      await page.screenshot({ path: `${IMAGES_DIR}/14_leave_request_approved.png` });
+      console.log('✅ 14_leave_request_approved.png');
+      await page.close();
+    }
+
     await adminCtx.close();
   } finally {
     await browser.close();
