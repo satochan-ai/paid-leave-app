@@ -135,6 +135,20 @@
 
 ---
 
+## Round 24：有給申請取消機能
+
+- `leaveRequestService.js` に `cancelLeaveRequest(requestId)` を追加
+- 取消できるのは pending の申請のみ
+- 社員は自分の申請のみ取消可能（管理者は全申請を取消可能）
+- 取消時は残日数を変更しない
+- 取消済みは `cancelled` ステータスとして履歴に保持
+- 社員マイページの申請履歴に「取消」ボタンを追加（pending のみ表示）
+- 管理者の申請一覧フィルターに「取消」を追加
+- 有給申請履歴CSVに「取消者ID」「取消日時」カラムを追加
+- `leaveRequests` に `cancelledBy` / `cancelledAt` フィールドを追加
+
+---
+
 ## Round 23：有給申請履歴CSV出力
 
 - `csvService.js` に `exportLeaveRequestsCsv()` を追加

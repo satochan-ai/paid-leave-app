@@ -1194,21 +1194,51 @@ function renderEmployeeLeaveRequestHistory(employeeId) {
 
   const requests = getLeaveRequestsByEmployeeId(employeeId);
   if (requests.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty-row">申請履歴はありません</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-row">申請履歴はありません</td></tr>';
     return;
   }
 
   tbody.innerHTML = requests
-    .map((r) => `
-      <tr>
-        <td>${esc(r.requestDate)}</td>
-        <td>${esc(r.usageDate)}</td>
-        <td>${r.usedDays} 日</td>
-        <td>${esc(r.reason || '—')}</td>
-        <td><span class="badge ${esc(getLeaveRequestStatusBadgeClass(r.status))}">${esc(getLeaveRequestStatusLabel(r.status))}</span></td>
-        <td>${esc(r.rejectReason || '—')}</td>
-      </tr>`)
+    .map((r) => {
+      // pending かつ自分の申請のみ「取消」ボタンを表示
+      const canCancel = r.status === 'pending';
+      const cancelBtn = canCancel
+        ? `<button class="btn btn-outline btn-sm" onclick="handleCancelLeaveRequest('${esc(r.id)}')">取消</button>`
+        : '—';
+      return `
+        <tr>
+          <td>${esc(r.requestDate)}</td>
+          <td>${esc(r.usageDate)}</td>
+          <td>${r.usedDays} 日</td>
+          <td>${esc(r.reason || '—')}</td>
+          <td><span class="badge ${esc(getLeaveRequestStatusBadgeClass(r.status))}">${esc(getLeaveRequestStatusLabel(r.status))}</span></td>
+          <td>${esc(r.rejectReason || '—')}</td>
+          <td>${cancelBtn}</td>
+        </tr>`;
+    })
     .join('');
+}
+
+/**
+ * 有給申請取消ハンドラ（社員マイページから呼ばれる）
+ * @param {string} requestId
+ */
+function handleCancelLeaveRequest(requestId) {
+  if (!confirm('この有給申請を取り消しますか？')) return;
+
+  const result = cancelLeaveRequest(requestId);
+  if (!result.success) {
+    alert('取消に失敗しました：' + (result.message || ''));
+    return;
+  }
+
+  alert('申請を取り消しました。');
+
+  // 申請履歴を再描画（現在ログイン中の社員のIDで再描画）
+  const user = getCurrentUser();
+  if (user && user.employeeId) {
+    renderEmployeeLeaveRequestHistory(user.employeeId);
+  }
 }
 
 // ─────────────────────────────────────────
@@ -1365,5 +1395,6 @@ window.renderLeaveRequestsPage = renderLeaveRequestsPage;
 window.renderLeaveRequestTable = renderLeaveRequestTable;
 window.handleApproveLeaveRequest = handleApproveLeaveRequest;
 window.handleRejectLeaveRequest = handleRejectLeaveRequest;
+window.handleCancelLeaveRequest = handleCancelLeaveRequest;
 
 document.addEventListener('DOMContentLoaded', initializeApp);

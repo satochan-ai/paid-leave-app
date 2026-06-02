@@ -38,6 +38,8 @@ function createLeaveRequest(employeeId, usageDate, usedDays, reason) {
     rejectedBy: '',
     rejectedAt: '',
     rejectReason: '',
+    cancelledBy: '',
+    cancelledAt: '',
     createdAt: now,
     updatedAt: now,
   };
@@ -155,6 +157,45 @@ function rejectLeaveRequest(requestId, rejectReason) {
 }
 
 /**
+ * 申請を取り消す（社員本人または管理者が実行）
+ * 取消できるのは pending の申請のみ。取消時は残日数を変更しない。
+ * @param {string} requestId
+ * @returns {{ success: boolean, request?: object, message?: string }}
+ */
+function cancelLeaveRequest(requestId) {
+  const requests = getLeaveRequests();
+  const idx = requests.findIndex((r) => r.id === requestId);
+  if (idx === -1) {
+    return { success: false, message: '申請が見つかりません。' };
+  }
+
+  const request = requests[idx];
+  if (request.status !== 'pending') {
+    return { success: false, message: '申請中の申請のみ取り消せます。' };
+  }
+
+  // 権限チェック：社員は自分の申請のみ取消可能
+  const currentUser = getCurrentUser();
+  if (currentUser && currentUser.role === 'employee') {
+    if (currentUser.employeeId !== request.employeeId) {
+      return { success: false, message: '他の社員の申請は取り消せません。' };
+    }
+  }
+
+  const now = new Date().toISOString();
+  requests[idx] = {
+    ...request,
+    status: 'cancelled',
+    cancelledBy: currentUser ? currentUser.id : '',
+    cancelledAt: now,
+    updatedAt: now,
+  };
+  saveLeaveRequests(requests);
+
+  return { success: true, request: requests[idx] };
+}
+
+/**
  * 申請ステータスのラベルを返す
  * @param {string} status
  * @returns {string}
@@ -201,6 +242,7 @@ window.getAllLeaveRequests             = getAllLeaveRequests;
 window.getLeaveRequestById            = getLeaveRequestById;
 window.approveLeaveRequest            = approveLeaveRequest;
 window.rejectLeaveRequest             = rejectLeaveRequest;
+window.cancelLeaveRequest             = cancelLeaveRequest;
 window.getLeaveRequestStatusLabel     = getLeaveRequestStatusLabel;
 window.getLeaveRequestStatusBadgeClass= getLeaveRequestStatusBadgeClass;
 window.getPendingLeaveRequestCount    = getPendingLeaveRequestCount;

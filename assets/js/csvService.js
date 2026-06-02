@@ -366,6 +366,7 @@ function exportLeaveRequestsCsv() {
     '申請ID', '社員ID', '社員名', 'メールアドレス',
     '申請日', '取得希望日', '取得日数', '申請理由', 'ステータス',
     '承認者ID', '承認日時', '却下者ID', '却下日時', '却下理由',
+    '取消者ID', '取消日時',
     '作成日時', '更新日時',
   ];
 
@@ -403,6 +404,8 @@ function exportLeaveRequestsCsv() {
       r.rejectedBy    || '',
       r.rejectedAt    || '',
       r.rejectReason  || '',
+      r.cancelledBy   || '',
+      r.cancelledAt   || '',
       r.createdAt     || '',
       r.updatedAt     || '',
     ];
