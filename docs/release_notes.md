@@ -135,6 +135,25 @@
 
 ---
 
+## Round 19：比例付与対応
+
+- 社員データに勤務条件を追加（workType / weeklyWorkDays / weeklyWorkHours / annualWorkDays）
+- 通常付与 / 比例付与を判定する関数群を `leaveCalculator.js` に追加
+- 週所定労働日数・週所定労働時間・年間所定労働日数に応じた比例付与テーブルを実装
+- `calculateGrantDays()` が `employee` 引数に対応（後方互換あり）
+- `leaveService.js` の `generateLeaveGrantsIfNeeded()` が比例付与に対応
+- 社員追加・編集フォームに勤務条件セクション追加
+- 社員一覧に付与区分バッジを追加
+- 社員詳細に勤務条件（付与区分・週日数・週時間・年間日数）を表示
+- 社員マイページに勤務条件カードを追加
+- CSV出力（社員一覧・有給残日数・社員別詳細）に勤務条件カラムを追加
+- バックアップ/復元の GitHub Pages パス修正
+- seed.js に比例付与サンプル社員（佐藤 花子）を追加
+- docs/proportional_grant_spec.md を新規作成
+- docs/data_model.md・logic_spec.md を更新
+
+---
+
 ## Round 18：GitHub公開・公開後確認
 
 - GitHubリポジトリ（satochan-ai/paid-leave-app）をpublicで公開

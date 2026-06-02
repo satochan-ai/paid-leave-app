@@ -66,6 +66,45 @@ function validateEmployeeForm(data, options = { mode: 'create' }) {
     errors.retirementDate = '退職日は入社日以降の日付を入力してください。';
   }
 
+  // 付与区分チェック
+  const validWorkTypes = ['normal', 'proportional', 'custom'];
+  if (data.workType && !validWorkTypes.includes(data.workType)) {
+    errors.workType = '付与区分は「通常付与」「比例付与」「個別設定」のいずれかを選択してください。';
+  }
+
+  // 週所定労働日数チェック
+  if (data.weeklyWorkDays !== '' && data.weeklyWorkDays != null) {
+    const days = Number(data.weeklyWorkDays);
+    if (isNaN(days) || days < 1 || days > 7) {
+      errors.weeklyWorkDays = '週所定労働日数は1〜7の範囲で入力してください。';
+    }
+  }
+
+  // 週所定労働時間チェック
+  if (data.weeklyWorkHours !== '' && data.weeklyWorkHours != null) {
+    const hours = Number(data.weeklyWorkHours);
+    if (isNaN(hours) || hours < 0 || hours > 80) {
+      errors.weeklyWorkHours = '週所定労働時間は0〜80の範囲で入力してください。';
+    }
+  }
+
+  // 年間所定労働日数チェック
+  if (data.annualWorkDays !== '' && data.annualWorkDays != null) {
+    const annual = Number(data.annualWorkDays);
+    if (isNaN(annual) || annual < 0 || annual > 366) {
+      errors.annualWorkDays = '年間所定労働日数は0〜366の範囲で入力してください。';
+    }
+  }
+
+  // 比例付与の場合は週所定労働日数または年間所定労働日数が必要
+  if (data.workType === 'proportional') {
+    const hasWeekly = data.weeklyWorkDays !== '' && data.weeklyWorkDays != null && Number(data.weeklyWorkDays) >= 1;
+    const hasAnnual = data.annualWorkDays !== '' && data.annualWorkDays != null && Number(data.annualWorkDays) >= 1;
+    if (!hasWeekly && !hasAnnual) {
+      errors.weeklyWorkDays = '比例付与の場合は週所定労働日数または年間所定労働日数を入力してください。';
+    }
+  }
+
   return { valid: Object.keys(errors).length === 0, errors };
 }
 

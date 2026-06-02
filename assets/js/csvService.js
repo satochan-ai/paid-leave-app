@@ -116,21 +116,29 @@ function exportEmployeesCsv() {
 
   const headers = [
     '社員ID', '社員名', 'メールアドレス', '入社日', '退職日',
-    'ステータス', '備考', '作成日時', '更新日時',
+    'ステータス', '付与区分', '週所定労働日数', '週所定労働時間', '年間所定労働日数',
+    '備考', '作成日時', '更新日時',
   ];
 
   const employees = getAllEmployees();
-  const rows = employees.map((emp) => [
-    emp.id,
-    emp.name,
-    emp.email,
-    emp.hireDate,
-    emp.retirementDate || '',
-    _statusLabel(emp.status),
-    emp.note || '',
-    emp.createdAt || '',
-    emp.updatedAt || '',
-  ]);
+  const rows = employees.map((emp) => {
+    const cond = getDefaultWorkCondition(emp);
+    return [
+      emp.id,
+      emp.name,
+      emp.email,
+      emp.hireDate,
+      emp.retirementDate || '',
+      _statusLabel(emp.status),
+      getWorkTypeLabel(cond.workType),
+      cond.weeklyWorkDays,
+      cond.weeklyWorkHours,
+      cond.annualWorkDays,
+      emp.note || '',
+      emp.createdAt || '',
+      emp.updatedAt || '',
+    ];
+  });
 
   downloadCsv(`employees_${formatCsvDateTime()}.csv`, headers, rows);
 }
@@ -150,6 +158,7 @@ function exportLeaveSummaryCsv() {
 
   const headers = [
     '社員ID', '社員名', 'メールアドレス', 'ステータス', '入社日',
+    '付与区分', '週所定労働日数', '週所定労働時間', '年間所定労働日数',
     '総付与日数', '総取得日数', '有効残日数', '失効済み残日数',
     '次回付与日', '次回付与日数', '直近失効日', '直近失効日数',
   ];
@@ -160,12 +169,17 @@ function exportLeaveSummaryCsv() {
   const rows = employees.map((emp) => {
     generateLeaveGrantsIfNeeded(emp.id, today);
     const s = calculateLeaveSummary(emp.id, today);
+    const cond = getDefaultWorkCondition(emp);
     return [
       emp.id,
       emp.name,
       emp.email,
       _statusLabel(emp.status),
       emp.hireDate,
+      getWorkTypeLabel(cond.workType),
+      cond.weeklyWorkDays,
+      cond.weeklyWorkHours,
+      cond.annualWorkDays,
       s.totalGrantedDays,
       s.totalUsedDays,
       s.activeRemainingDays,
@@ -255,6 +269,8 @@ function exportEmployeeDetailCsv(employeeId) {
 
   const lines = [];
 
+  const cond = getDefaultWorkCondition(employee);
+
   // 基本情報
   const basicRows = [
     ['基本情報', '社員ID', employee.id],
@@ -263,6 +279,10 @@ function exportEmployeeDetailCsv(employeeId) {
     ['基本情報', '入社日', employee.hireDate],
     ['基本情報', '退職日', employee.retirementDate || ''],
     ['基本情報', 'ステータス', _statusLabel(employee.status)],
+    ['基本情報', '付与区分', getWorkTypeLabel(cond.workType)],
+    ['基本情報', '週所定労働日数', cond.weeklyWorkDays],
+    ['基本情報', '週所定労働時間', cond.weeklyWorkHours],
+    ['基本情報', '年間所定労働日数', cond.annualWorkDays],
     ['基本情報', '備考', employee.note || ''],
   ];
   lines.push(['セクション', '項目', '値'].map(escapeCsvValue).join(','));

@@ -69,7 +69,7 @@ function generateLeaveGrantsIfNeeded(employeeId, currentDate) {
   const newGrants = [];
 
   dueDates.forEach((grantDate) => {
-    const grantedDays = calculateGrantDays(employee.hireDate, grantDate);
+    const grantedDays = calculateGrantDays(employee.hireDate, grantDate, employee);
     const expireDate = calculateExpireDate(grantDate);
     const grant = {
       id: generateId('grant'),

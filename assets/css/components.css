@@ -317,6 +317,26 @@
   color: #1e40af;
 }
 
+/* 付与区分バッジ */
+.work-type-badge {
+  font-size: 11px;
+}
+
+.work-type-normal {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.work-type-proportional {
+  background-color: #fce7f3;
+  color: #9d174d;
+}
+
+.work-type-custom {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
 /* 入力欄 */
 .form-group {
   margin-bottom: 16px;

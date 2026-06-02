@@ -83,29 +83,61 @@ getGrantCount("2024-04-01", "2026-10-01") // → 3
 
 ---
 
-### `calculateGrantDays(hireDate, grantDate)`
+### `calculateGrantDays(hireDate, grantDate, employee?)`
 
 | 項目 | 内容 |
 |------|------|
-| 目的 | 指定付与日の付与日数を計算する |
-| 引数 | `hireDate: string`, `grantDate: string` |
-| 戻り値 | `number` — 付与日数（10〜20） |
+| 目的 | 指定付与日の付与日数を計算する（通常付与・比例付与対応） |
+| 引数 | `hireDate: string`, `grantDate: string`, `employee?: object`（省略時は通常付与） |
+| 戻り値 | `number` — 付与日数 |
 
 ```js
-calculateGrantDays("2024-04-01", "2024-10-01") // → 10（1回目）
-calculateGrantDays("2024-04-01", "2025-10-01") // → 11（2回目）
-calculateGrantDays("2024-04-01", "2026-10-01") // → 12（3回目）
-calculateGrantDays("2024-04-01", "2027-10-01") // → 14（4回目）
-calculateGrantDays("2024-04-01", "2028-10-01") // → 16（5回目）
-calculateGrantDays("2024-04-01", "2029-10-01") // → 18（6回目）
-calculateGrantDays("2024-04-01", "2030-10-01") // → 20（7回目以降）
+// 通常付与
+calculateGrantDays("2024-04-01", "2024-10-01") // → 10
+// 比例付与（週3日）
+calculateGrantDays("2024-04-01", "2024-10-01", { workType:"proportional", weeklyWorkDays:3, weeklyWorkHours:24, annualWorkDays:156 }) // → 5
 ```
 
-**計算式**
-```js
-const LEGAL_GRANT_DAYS = [10, 11, 12, 14, 16, 18, 20];
-付与日数 = LEGAL_GRANT_DAYS[min(getGrantCount(...) - 1, 6)]
-```
+**計算フロー**
+1. `getGrantCount(hireDate, grantDate)` で付与回次を取得
+2. `employee` 未指定 → `calculateNormalGrantDays()`
+3. `isNormalGrantTarget(employee)` が true → `calculateNormalGrantDays()`
+4. 比例付与対象 → `getProportionalWeeklyDays(employee)` で週日数相当を取得
+5. `calculateProportionalGrantDays(grantCount, weeklyDays)` で日数を返す
+6. 判定不能の場合 → `calculateNormalGrantDays()` にフォールバック
+
+---
+
+## 比例付与仕様（Round19追加）
+
+詳細は `docs/proportional_grant_spec.md` を参照。
+
+### 通常付与対象の判定（isNormalGrantTarget）
+
+以下のいずれかに該当すれば通常付与：
+- `workType === "normal"`
+- 週所定労働時間 ≥ 30
+- 週所定労働日数 ≥ 5
+- 年間所定労働日数 ≥ 217
+
+### 比例付与テーブル
+
+| 週所定労働日数 | 0.5年 | 1.5年 | 2.5年 | 3.5年 | 4.5年 | 5.5年 | 6.5年以上 |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 4日 | 7 | 8 | 9 | 10 | 12 | 13 | 15 |
+| 3日 | 5 | 6 | 6 | 8 | 9 | 10 | 11 |
+| 2日 | 3 | 4 | 4 | 5 | 6 | 6 | 7 |
+| 1日 | 1 | 2 | 2 | 2 | 3 | 3 | 3 |
+
+### 年間所定労働日数による週日数換算
+
+| 年間所定労働日数 | 週日数相当 |
+|---:|---:|
+| 169〜216日 | 4日 |
+| 121〜168日 | 3日 |
+| 73〜120日 | 2日 |
+| 48〜72日 | 1日 |
+| 217日以上 | 通常付与 |
 
 ---
 

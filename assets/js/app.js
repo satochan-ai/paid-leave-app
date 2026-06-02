@@ -255,6 +255,16 @@ function getStatusBadgeClass(status) {
   return map[status] || '';
 }
 
+/** 付与区分バッジCSSクラスを返す */
+function _getWorkTypeBadgeClass(workType) {
+  const map = {
+    normal:       'work-type-normal',
+    proportional: 'work-type-proportional',
+    custom:       'work-type-custom',
+  };
+  return map[workType] || 'work-type-normal';
+}
+
 /** 指定日が今日から days 日以内かどうかを判定する */
 function isWithinDays(dateString, days) {
   if (!dateString) return false;
@@ -389,12 +399,15 @@ function _renderEmployeeTable(employees, today) {
       generateLeaveGrantsIfNeeded(emp.id, today);
       const s = calculateLeaveSummary(emp.id, today);
       const remainingClass = s.activeRemainingDays <= 5 ? 'text-danger' : s.activeRemainingDays <= 10 ? 'text-warning' : '';
+      const cond = getDefaultWorkCondition(emp);
+      const workTypeBadgeClass = _getWorkTypeBadgeClass(cond.workType);
       return `
       <tr>
         <td><strong>${esc(emp.name)}</strong></td>
         <td class="text-muted">${esc(emp.email)}</td>
         <td>${esc(emp.hireDate)}</td>
         <td><span class="badge ${esc(getStatusBadgeClass(emp.status))}">${esc(getStatusLabel(emp.status))}</span></td>
+        <td><span class="badge work-type-badge ${workTypeBadgeClass}">${esc(getWorkTypeLabel(cond.workType))}</span></td>
         <td>${s.totalGrantedDays} 日</td>
         <td>${s.totalUsedDays} 日</td>
         <td><span class="remaining-days ${remainingClass}">${s.activeRemainingDays} 日</span></td>
@@ -523,12 +536,18 @@ function _showDetailError(message) {
 function renderEmployeeBasicInfo(employee) {
   const el = document.getElementById('employeeInfo');
   if (!el) return;
+  const cond = getDefaultWorkCondition(employee);
+  const workTypeBadgeClass = _getWorkTypeBadgeClass(cond.workType);
   const fields = [
     { label: '社員名', value: employee.name },
     { label: 'メールアドレス', value: employee.email },
     { label: '入社日', value: employee.hireDate },
     { label: '退職日', value: employee.retirementDate || '—' },
     { label: 'ステータス', value: `<span class="badge ${getStatusBadgeClass(employee.status)}">${getStatusLabel(employee.status)}</span>` },
+    { label: '付与区分', value: `<span class="badge work-type-badge ${workTypeBadgeClass}">${esc(getWorkTypeLabel(cond.workType))}</span>` },
+    { label: '週所定労働日数', value: cond.weeklyWorkDays + ' 日' },
+    { label: '週所定労働時間', value: cond.weeklyWorkHours + ' 時間' },
+    { label: '年間所定労働日数', value: cond.annualWorkDays + ' 日' },
     { label: '備考', value: employee.note || '—' },
   ];
   el.innerHTML = fields
@@ -661,10 +680,32 @@ function renderMyPage() {
 
   const metaEl = document.getElementById('myMeta');
   if (metaEl) {
+    const cond = getDefaultWorkCondition(employee);
     metaEl.textContent =
       employee.email +
       '　入社日：' + employee.hireDate +
-      '　' + getStatusLabel(employee.status);
+      '　' + getStatusLabel(employee.status) +
+      '　付与区分：' + getWorkTypeLabel(cond.workType);
+  }
+
+  // 勤務条件カード
+  const workCondEl = document.getElementById('myWorkCondition');
+  if (workCondEl) {
+    const cond = getDefaultWorkCondition(employee);
+    const workTypeBadgeClass = _getWorkTypeBadgeClass(cond.workType);
+    workCondEl.innerHTML = `
+      <div class="info-item">
+        <label>付与区分</label>
+        <p><span class="badge work-type-badge ${workTypeBadgeClass}">${esc(getWorkTypeLabel(cond.workType))}</span></p>
+      </div>
+      <div class="info-item">
+        <label>週所定労働日数</label>
+        <p>${cond.weeklyWorkDays} 日</p>
+      </div>
+      <div class="info-item">
+        <label>週所定労働時間</label>
+        <p>${cond.weeklyWorkHours} 時間</p>
+      </div>`;
   }
 
   const remEl = document.getElementById('myRemaining');
@@ -839,8 +880,9 @@ function setEmployeeFormValues(employee, user) {
   const set = (id, val) => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.value = val || '';
+    el.value = val !== undefined && val !== null ? val : '';
   };
+  const cond = getDefaultWorkCondition(employee);
   set('name', employee.name);
   set('email', employee.email);
   set('password', user.password || '');
@@ -848,6 +890,10 @@ function setEmployeeFormValues(employee, user) {
   set('hireDate', employee.hireDate);
   set('retirementDate', employee.retirementDate || '');
   set('status', employee.status || 'active');
+  set('workType', cond.workType);
+  set('weeklyWorkDays', cond.weeklyWorkDays);
+  set('weeklyWorkHours', cond.weeklyWorkHours);
+  set('annualWorkDays', cond.annualWorkDays);
   set('note', employee.note || '');
 }
 
@@ -865,6 +911,10 @@ function getEmployeeFormData() {
     hireDate: val('hireDate'),
     retirementDate: val('retirementDate'),
     status: val('status'),
+    workType: val('workType') || 'normal',
+    weeklyWorkDays: val('weeklyWorkDays'),
+    weeklyWorkHours: val('weeklyWorkHours'),
+    annualWorkDays: val('annualWorkDays'),
     note: val('note'),
   };
 }
@@ -1034,6 +1084,7 @@ window.renderLeaveUsageTable = renderLeaveUsageTable;
 window.handleDeleteEmployee = handleDeleteEmployee;
 window.getStatusLabel = getStatusLabel;
 window.getStatusBadgeClass = getStatusBadgeClass;
+window._getWorkTypeBadgeClass = _getWorkTypeBadgeClass;
 window.isWithinDays = isWithinDays;
 
 document.addEventListener('DOMContentLoaded', initializeApp);

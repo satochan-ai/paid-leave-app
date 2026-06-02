@@ -6,7 +6,8 @@
  *
  * 初期ログイン情報:
  *   管理者: admin@example.com / admin123
- *   社員:   yamada@example.com / password123
+ *   社員（通常付与）: yamada@example.com / password123
+ *   社員（比例付与）: sato@example.com   / password123
  */
 
 /**
@@ -36,6 +37,14 @@ function initializeSeedData() {
       password: 'password123',
       role: 'employee',
     },
+    {
+      id: 'user_emp_002',
+      employeeId: 'emp_002',
+      name: '佐藤 花子',
+      email: 'sato@example.com',
+      password: 'password123',
+      role: 'employee',
+    },
   ]);
 
   // --- 社員マスタ ---
@@ -47,7 +56,26 @@ function initializeSeedData() {
       hireDate: '2024-04-01',
       retirementDate: '',
       status: 'active',
-      note: 'サンプル社員',
+      workType: 'normal',
+      weeklyWorkDays: 5,
+      weeklyWorkHours: 40,
+      annualWorkDays: 260,
+      note: 'サンプル社員（通常付与）',
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: 'emp_002',
+      name: '佐藤 花子',
+      email: 'sato@example.com',
+      hireDate: '2024-04-01',
+      retirementDate: '',
+      status: 'active',
+      workType: 'proportional',
+      weeklyWorkDays: 3,
+      weeklyWorkHours: 24,
+      annualWorkDays: 156,
+      note: '比例付与サンプル社員（週3日・24時間）',
       createdAt: now,
       updatedAt: now,
     },
@@ -75,6 +103,26 @@ function initializeSeedData() {
       expireDate: '2027-10-01',
       createdAt: now,
     },
+    {
+      id: 'grant_003',
+      employeeId: 'emp_002',
+      grantDate: '2024-10-01',
+      grantedDays: 5,
+      usedDays: 1,
+      remainingDays: 4,
+      expireDate: '2026-10-01',
+      createdAt: now,
+    },
+    {
+      id: 'grant_004',
+      employeeId: 'emp_002',
+      grantDate: '2025-10-01',
+      grantedDays: 6,
+      usedDays: 0,
+      remainingDays: 6,
+      expireDate: '2027-10-01',
+      createdAt: now,
+    },
   ]);
 
   // --- 有給取得履歴 ---
@@ -92,6 +140,15 @@ function initializeSeedData() {
       id: 'usage_002',
       employeeId: 'emp_001',
       usageDate: '2026-02-15',
+      usedDays: 1,
+      note: '私用',
+      createdBy: 'user_admin_001',
+      createdAt: now,
+    },
+    {
+      id: 'usage_003',
+      employeeId: 'emp_002',
+      usageDate: '2026-01-20',
       usedDays: 1,
       note: '私用',
       createdBy: 'user_admin_001',

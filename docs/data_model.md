@@ -51,6 +51,10 @@
   "hireDate": "2022-04-01",
   "retirementDate": null,
   "status": "active",
+  "workType": "normal",
+  "weeklyWorkDays": 5,
+  "weeklyWorkHours": 40,
+  "annualWorkDays": 260,
   "note": "",
   "createdAt": "2022-04-01",
   "updatedAt": "2022-04-01"
@@ -65,6 +69,10 @@
 | hireDate | string | 入社日（YYYY-MM-DD） |
 | retirementDate | string \| null | 退職日（YYYY-MM-DD）。未退職はnull |
 | status | "active" \| "leave" \| "retired" | 在籍ステータス |
+| workType | "normal" \| "proportional" \| "custom" | 付与区分。未設定は "normal" として扱う |
+| weeklyWorkDays | number | 週所定労働日数。未設定は 5 として扱う |
+| weeklyWorkHours | number | 週所定労働時間。未設定は 40 として扱う |
+| annualWorkDays | number | 年間所定労働日数。未設定は 260 として扱う |
 | note | string | 備考 |
 | createdAt | string | 作成日（YYYY-MM-DD） |
 | updatedAt | string | 更新日（YYYY-MM-DD） |

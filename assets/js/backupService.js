@@ -138,8 +138,9 @@ function restoreBackupData(data) {
     // currentUser を削除してログイン画面へ戻す
     removeCurrentUserFromStorage();
 
-    const depth = location.pathname.split('/').filter(Boolean).length;
-    const prefix = depth >= 3 ? '../../' : '';
+    // /pages/admin/ 配下からの復元を考慮（GitHub Pages対応）
+    const path = location.pathname;
+    const prefix = (path.includes('/pages/admin/') || path.includes('/pages/employee/')) ? '../../' : '';
     location.href = prefix + 'index.html';
 
     return { success: true };

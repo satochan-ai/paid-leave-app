@@ -89,6 +89,40 @@
             </div>
           </div>
 
+          <!-- 勤務条件 -->
+          <div class="form-section-title">勤務条件</div>
+          <p class="form-hint">週5日以上、週30時間以上、または年間217日以上の場合は通常付与として扱います。週4日以下かつ週30時間未満の場合は比例付与の対象になります。</p>
+
+          <div class="form-group">
+            <label for="workType">付与区分 <span class="required">*</span></label>
+            <select id="workType" name="workType" class="form-control">
+              <option value="normal">通常付与</option>
+              <option value="proportional">比例付与</option>
+              <option value="custom">個別設定</option>
+            </select>
+            <p class="field-error" id="workTypeError"></p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="weeklyWorkDays">週所定労働日数</label>
+              <input type="number" id="weeklyWorkDays" name="weeklyWorkDays" class="form-control" min="1" max="7" step="1" placeholder="1〜7">
+              <p class="field-error" id="weeklyWorkDaysError"></p>
+            </div>
+
+            <div class="form-group">
+              <label for="weeklyWorkHours">週所定労働時間</label>
+              <input type="number" id="weeklyWorkHours" name="weeklyWorkHours" class="form-control" min="0" max="80" step="0.5" placeholder="0〜80">
+              <p class="field-error" id="weeklyWorkHoursError"></p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="annualWorkDays">年間所定労働日数</label>
+            <input type="number" id="annualWorkDays" name="annualWorkDays" class="form-control" min="0" max="366" step="1" placeholder="0〜366">
+            <p class="field-error" id="annualWorkDaysError"></p>
+          </div>
+
           <div class="form-group">
             <label for="note">備考</label>
             <textarea id="note" name="note" class="form-control" rows="3" placeholder="管理メモ（任意）"></textarea>
