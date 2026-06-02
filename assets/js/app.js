@@ -209,9 +209,9 @@ function resetDemoData() {
   // 初期データを再投入
   initializeSeedData();
 
-  // ログイン画面へ戻す
-  const depth = location.pathname.split('/').filter(Boolean).length;
-  const prefix = depth >= 3 ? '../../' : '';
+  // ログイン画面へ戻す（/pages/admin/ 配下からのリセットを考慮）
+  const path = location.pathname;
+  const prefix = (path.includes('/pages/admin/') || path.includes('/pages/employee/')) ? '../../' : '';
   location.href = prefix + 'index.html';
 }
 

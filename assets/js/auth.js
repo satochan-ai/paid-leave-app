@@ -31,9 +31,9 @@ function login(email, password) {
 function logout() {
   removeCurrentUserFromStorage();
 
-  // index.html の位置を現在のパス深さから計算する
-  const depth = location.pathname.split('/').filter(Boolean).length;
-  const prefix = depth >= 3 ? '../../' : '';
+  // /pages/admin/ または /pages/employee/ 配下からのログアウトかを判定する
+  const path = location.pathname;
+  const prefix = (path.includes('/pages/admin/') || path.includes('/pages/employee/')) ? '../../' : '';
   location.href = `${prefix}index.html`;
 }
 

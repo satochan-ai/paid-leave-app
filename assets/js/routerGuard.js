@@ -5,14 +5,15 @@
  * 各HTMLファイルの <script> ブロックで適切な関数を呼び出す。
  */
 
-/** パス深さからルートへの相対パスプレフィックスを返すヘルパー */
+/** パス構造からルートへの相対パスプレフィックスを返すヘルパー */
 function _getRootPrefix() {
-  // pathname を '/' で分割して空文字を除いたセグメント数から深さを判定
-  // 例: /pages/admin/dashboard.html → depth=3 → '../../'
-  const segments = location.pathname.split('/').filter(Boolean);
-  const depth = segments.length;
-  if (depth >= 3) return '../../';
-  if (depth >= 2) return '../';
+  // pathname に /pages/admin/ または /pages/employee/ が含まれるかで判定する。
+  // 深さ（セグメント数）で判定すると GitHub Pages ではリポジトリ名が
+  // パスに含まれるため誤判定が起きる。
+  const path = location.pathname;
+  if (path.includes('/pages/admin/') || path.includes('/pages/employee/')) {
+    return '../../';
+  }
   return '';
 }
 
